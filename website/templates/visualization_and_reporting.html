@@ -1,0 +1,94 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} 
+{% block content %}
+
+    {% if dataFound %}
+    <h1 align="center">Visualization and reporting creator</h1>
+    <div style="text-align:center;">
+        <h3>List of data</h3>
+        {% for filename in files%}
+        <a href ="">{{filename}}</a><br />
+        {% endfor%}
+    </div>
+
+    <div align="center">
+        <table>
+            <h1>
+            <!--Displaying the converted table-->
+                {% for table in tables %}                          
+                {{ table|safe }}
+                {% endfor %}     
+            </h1> 
+        </table>
+    </div>
+    <br/>
+    <br/>
+
+    <form method="POST">
+        <div class="form-group">
+            <label> Rename columns(enter column names separated by ',')</label>
+            <textarea name="columnNames" id="column-names" class="form-control"></textarea>
+        </div>
+        <label> Choose your chart: </label> 
+        <br/>
+        <label>
+            <input type="radio" name="chart-type" value="scatter"> Scatter plot
+        </label>
+        <label>
+            <input type="radio" name="chart-type" value="bar"> Bar plot
+        </label>
+
+        <div class="form-group">
+            <label for="x">X:</label>
+            <input 
+                type="x" 
+                class="form-control" 
+                id="x"
+                name="x" 
+                placeholder="Enter your X"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="y">Y:</label>
+            <input 
+                type="y" 
+                class="form-control" 
+                id="y"
+                name="y" 
+                placeholder="Enter your Y"
+            />
+        </div>
+
+        <div align="center">
+            <button type="submit" class="btn btn-primary"> Generate report </button>
+        </div>
+    </form>
+
+    
+
+    <div>
+        <div id='chart' class='chart'”></div>
+        <p>
+            Testowy wykres
+        </p>
+    </div>
+
+    <br/>
+    <br/>
+    
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <script type='text/javascript'>
+        var graphs = {{graphJSON | safe}};
+        Plotly.plot('chart',graphs,{});
+    </script>
+
+    {% else %}
+    <div style="text-align:center;">
+        <h3 style="color:red;">No CSV file. First use the upload tab</h3>
+    </div>
+
+    {% endif %}
+
+    
+
+{% endblock %}
