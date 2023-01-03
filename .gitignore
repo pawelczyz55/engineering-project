@@ -1,0 +1,4 @@
+.vscode/
+website/__pycache__/
+functions/__pycache__/
+__pycache__/
