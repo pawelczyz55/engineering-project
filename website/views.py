@@ -10,9 +10,21 @@ from functions.importCsvData import procces_csv
 
 views = Blueprint('views', __name__)
 
-@views.route('/', methods=['GET', 'POST'])
+@views.route('/', methods=['GET'])
 @login_required
 def home():
+    return render_template("home.html", user=current_user)
+
+@views.route('/notes', methods=['GET', 'POST'])
+@login_required
+def notes():
+    """
+    Function render Notes tab page.
+
+    Return:
+        - string - template name of 'notes.html'
+        - user - data of current loged in user
+    """
     if request.method == 'POST':
         note = request.form.get('note')
 
@@ -25,7 +37,7 @@ def home():
 
             flash("Note added.", category='success')
 
-    return render_template("home.html", user=current_user)
+    return render_template("notes.html", user=current_user )
 
 @views.route('/delete-note', methods=['POST'])
 def delete_note():
@@ -50,7 +62,7 @@ def visualization_and_reporting():
     dataFound = False
 
     try:
-        data = procces_csv('G:\Projekt Inzynierski\csv_data\pnewFile.csv')
+        data = procces_csv(r'C:\Users\mjurc\OneDrive\Pulpit\engineering-project\csv_data\pnewFile.csv')
         dataFound = True
     except FileNotFoundError:
         return render_template("visualization_and_reporting.html",user=current_user, dataFound = dataFound)
@@ -100,7 +112,7 @@ def visualization_and_reporting():
     # graphJSON2 = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
 
     return render_template("visualization_and_reporting.html",user=current_user, 
-        files=os.listdir('G:\Projekt Inzynierski\csv_data'), 
+        files=os.listdir(r'C:\Users\mjurc\OneDrive\Pulpit\engineering-project\csv_data'),
         tables=[tableOf5.to_html()], 
         dataFound = dataFound, 
         graphJSON = graphJSON

@@ -2,3 +2,5 @@
 website/__pycache__/
 functions/__pycache__/
 __pycache__/
+venv/
+website/database.db

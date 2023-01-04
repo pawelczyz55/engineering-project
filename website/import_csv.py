@@ -7,6 +7,7 @@ from .views import views
 
 importCsv = Blueprint('import_csv', __name__)
 
+ROOT_DIR = os.path.dirname(os.path.abspath("main.py"))
 ALLOWED_EXTENSIONS = set(['csv'])
 
 def allowed_file(filename):
@@ -25,7 +26,7 @@ def upload():
             filename = secure_filename(file.filename)
             new_filename = f'pnewFile.csv'
             #new_filename = f'{filename.split(".")[0]}_newfile.csv'
-            save_location = os.path.join('G:\Projekt Inzynierski\csv_data', new_filename.replace('\\', ''))
+            save_location = os.path.join(r'C:\Users\mjurc\OneDrive\Pulpit\engineering-project\csv_data', new_filename.replace('\\', ''))
             file.save(save_location)
 
         return redirect(url_for('views.visualization_and_reporting'))
