@@ -18,3 +18,6 @@ def scatterPlot(df, x, y):
     fig = px.scatter(df, x, y)
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
+
+def getColumnsNamesInTable(df):
+    return ' '.join(str(e) for e in df.columns)

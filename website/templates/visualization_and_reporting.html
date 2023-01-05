@@ -23,19 +23,22 @@
     <br/>
     <br/>
 
+    <div align="center">
+        <h5>Current column names in table</h5>
+        <p>{{ columnsNames }} </p>
+    </div>
+
     <form method="POST">
         <div class="form-group">
             <label> Rename columns(enter column names separated by ',')</label>
             <textarea name="columnNames" id="column-names" class="form-control"></textarea>
         </div>
+
         <label> Choose your chart: </label> 
         <br/>
-        <label>
-            <input type="radio" name="chart-type" value="scatter"> Scatter plot
-        </label>
-        <label>
-            <input type="radio" name="chart-type" value="bar"> Bar plot
-        </label>
+        {{ form1.csrf_token }}
+        {{ form1.chartType }}
+        <br/><br/>
 
         <div class="form-group">
             <label for="x">X:</label>
@@ -44,7 +47,7 @@
                 class="form-control" 
                 id="x"
                 name="x" 
-                placeholder="Enter your X"
+                placeholder="Enter your X(column name)"
             />
         </div>
 
@@ -55,7 +58,7 @@
                 class="form-control" 
                 id="y"
                 name="y" 
-                placeholder="Enter your Y"
+                placeholder="Enter your Y(column name)"
             />
         </div>
 
