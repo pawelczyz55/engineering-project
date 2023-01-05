@@ -9,13 +9,20 @@ def renameColumnsName(df, newNames):
         df.columns = newNames
     return df
 
-def barPlot(df, x, y):
-    fig = px.bar(df, x , y)
+def barPlot(df, x, y, color):
+    if(color != ''):
+        fig = px.bar(df, x , y, color=color)
+    else:
+        fig = px.bar(df, x , y)
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
-def scatterPlot(df, x, y):
-    fig = px.scatter(df, x, y)
+def scatterPlot(df, x, y, color):
+    if(color != ''):
+        fig = px.scatter(df, x, y, color = color)
+    else:
+        fig = px.scatter(df, x, y)
+
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 

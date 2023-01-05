@@ -66,7 +66,7 @@ def visualization_and_reporting():
 
     tableOf5 = df.head()
     columnsNames = reportGeneratorFunction.getColumnsNamesInTable(df)
-    form1 = forms.ChartType()
+    form1 = forms.Forms()
     #form1.chartType.choices = 
 
     if request.method == 'POST':
@@ -76,18 +76,19 @@ def visualization_and_reporting():
         #chartType = "scatter"
         x = request.form.get('x')
         y = request.form.get('y')
+        color = request.form.get('color')
 
         #html = generateReport(csvData,newColumsNames, chartType,x,y)
         if newColumsNames != '':
             csvData = reportGeneratorFunction.renameColumnsName(csvData, newColumsNames)
         if str(chartType) == "scatterplot":
-            graphJSON = reportGeneratorFunction.scatterPlot(csvData,x,y)
+            graphJSON = reportGeneratorFunction.scatterPlot(csvData,x,y,color)
             html = render_template("report.html",
                 user=current_user, 
                 graphJSON = graphJSON)
 
         elif str(chartType) == "barplot":
-            graphJSON = reportGeneratorFunction.barPlot(csvData,x,y)
+            graphJSON = reportGeneratorFunction.barPlot(csvData,x,y,color)
             html = render_template("report.html",
                 user=current_user, 
                 graphJSON = graphJSON)

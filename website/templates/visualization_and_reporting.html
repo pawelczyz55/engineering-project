@@ -30,8 +30,8 @@
 
     <form method="POST">
         <div class="form-group">
-            <label> Rename columns(enter column names separated by ',')</label>
-            <textarea name="columnNames" id="column-names" class="form-control"></textarea>
+            <label> Rename columns(enter new column names separated by ',')</label>
+            <textarea name="columnNames" id="column-names" class="form-control" placeholder="ColumnName1,ColumnName2,ColumnName3,..."></textarea>
         </div>
 
         <label> Choose your chart: </label> 
@@ -43,7 +43,7 @@
         <div class="form-group">
             <label for="x">X:</label>
             <input 
-                type="x" 
+                type="text" 
                 class="form-control" 
                 id="x"
                 name="x" 
@@ -54,11 +54,22 @@
         <div class="form-group">
             <label for="y">Y:</label>
             <input 
-                type="y" 
+                type="text" 
                 class="form-control" 
                 id="y"
                 name="y" 
                 placeholder="Enter your Y(column name)"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="color">color by column:</label>
+            <input 
+                type="text" 
+                class="form-control" 
+                id="color"
+                name="color" 
+                placeholder="Optional(column name)"
             />
         </div>
 
