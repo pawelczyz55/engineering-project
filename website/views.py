@@ -70,13 +70,14 @@ def visualization_and_reporting():
     tableOf5 = data.head()
 
     if request.method == 'POST':
-        newColumsNames = request.form.get('columnNames')
+        oldColumnName = request.form.get('oldName')
+        newColumnName = request.form.get('newName')
         chartType = request.form.get('chart-type')
         #chartType = "scatter"
         x = request.form.get('x')
         y = request.form.get('y')
 
-        data = reportGeneratorFunction.renameColumnsName(data, newColumsNames)
+        data = reportGeneratorFunction.rename_columns(data, {oldColumnName:newColumnName})
         if str(chartType) == "scatter":
             graphJSON = reportGeneratorFunction.scatterPlot(data,x,y)
             return render_template("report.html",
@@ -115,5 +116,6 @@ def visualization_and_reporting():
         files=os.listdir(r'C:\Users\mjurc\OneDrive\Pulpit\engineering-project\csv_data'),
         tables=[tableOf5.to_html()], 
         dataFound = dataFound, 
-        graphJSON = graphJSON
+        graphJSON = graphJSON,
+        avaiable_columns=['one','two','three']
         )

@@ -3,11 +3,20 @@ import pandas as pd
 import plotly
 import plotly.express as px
 
-def renameColumnsName(df, newNames):
+def renameColumnsName(df, newNames: str):
     newNames = newNames.split(',')
     if len(df.columns) == len(newNames):
         df.columns = newNames
     return df
+
+def rename_columns(df: pd.DataFrame, new_names: dict):
+    """
+    Rename selected columns into given new names. Column to change should be given in dictionary.
+    Example of use:
+    >>>  col_to_rename = {old_column_name1: new_name1, old_column_name2: new_name2}
+    >>>  rename_columns(df, col_to_rename)
+    """
+    return df.rename(columns=new_names)
 
 def barPlot(df, x, y):
     fig = px.bar(df, x , y)

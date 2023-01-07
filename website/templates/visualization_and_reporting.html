@@ -25,9 +25,40 @@
 
     <form method="POST">
         <div class="form-group">
-            <label> Rename columns(enter column names separated by ',')</label>
-            <textarea name="columnNames" id="column-names" class="form-control"></textarea>
+            <input type="checkbox" id="transformation" name="perform-transformation-of-dataframe"/>
+            <label for="transformation">Transform Data Frame</label><br>
         </div>
+
+        <div class="form-group ">
+            <h5> Rename column:</h5>
+            <!-- <div class="form-row"></div> -->
+            <div class="form-row align-items-center">
+                <div class="form-group col-auto my-1">
+                    <label for="select-column-to-change">Column to rename:</label>
+                    <select class="form-select form-select-sm"
+                            aria-label=".form-select-sm example"
+                            id="select-column-to-change"
+                            name="oldName"
+                            style="height: 35px;">
+                        <option selected>Select column</option>
+                        {% for column in avaiable_columns %} 
+                            <option value="@column.id">{{column}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-inline col-auto my-1">
+                    <label for="newName">New name:  </label>
+                    <input type="text" class="form-control"
+                        id="new-name" name="newName" placeholder="Enter new name">
+                </div>
+                <div class="col-auto my-1">
+                    <button type="submit" class="btn  btn-success">
+                    Apply
+                </button>
+                </div>
+            </div>
+        </div>
+
         <label> Choose your chart: </label> 
         <br/>
         <label>
