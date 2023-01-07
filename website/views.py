@@ -61,9 +61,11 @@ from functions import reportGeneratorFunction, forms
 @login_required
 def visualization_and_reporting():
     dataFound = False
+    filename = 'pnewFile.csv'
+    location = f'csv_data\{filename}'
 
     try:
-        data = procces_csv(r'C:\Users\mjurc\OneDrive\Pulpit\engineering-project\csv_data\pnewFile.csv')
+        data = procces_csv(location)
         dataFound = True
     except FileNotFoundError:
         return render_template("visualization_and_reporting.html",user=current_user, dataFound = dataFound)
@@ -92,7 +94,7 @@ def visualization_and_reporting():
         color = request.form.get('color')
 
         #html = generateReport(csvData,newColumsNames, chartType,x,y)
-        if newColumsNames != '':
+        if newColumnName != '': # to jeszcze nie dziala
             csvData = reportGeneratorFunction.rename_columns(csvData, {oldColumnName:newColumnName})
         if str(chartType) == "scatterplot":
             graphJSON = reportGeneratorFunction.scatterPlot(csvData,x,y,color)
@@ -110,6 +112,10 @@ def visualization_and_reporting():
             html = render_template("report.html",
                 user=current_user, 
                 graphJSON = graphJSON)
+        
+        return html
+
+
 
 
 
@@ -122,9 +128,10 @@ def visualization_and_reporting():
     # graphJSON2 = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
 
     return render_template("visualization_and_reporting.html",user=current_user, 
-        files=os.listdir(r'C:\Users\mjurc\OneDrive\Pulpit\engineering-project\csv_data'),
+        files=os.listdir(r'csv_data'),
         tables=[tableOf5.to_html()], 
         dataFound = dataFound, 
         graphJSON = graphJSON,
-        avaiable_columns=['one','two','three']
+        avaiable_columns= df.columns,
+        form1 = form1
         )
