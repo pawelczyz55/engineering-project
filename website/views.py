@@ -51,7 +51,7 @@ def visualization_and_reporting():
     dataFound = False
 
     try:
-        data = procces_csv('G:\Projekt Inzynierski\csv_data\pnewFile.csv')
+        data = procces_csv('C:\py\proj_inz\engineering-project\csv_data\pnewFile.csv')
         dataFound = True
     except FileNotFoundError:
         return render_template("visualization_and_reporting.html",user=current_user, dataFound = dataFound)
@@ -92,6 +92,49 @@ def visualization_and_reporting():
             html = render_template("report.html",
                 user=current_user, 
                 graphJSON = graphJSON)
+
+        elif str(chartType) == "piechartplot":
+            graphJSON = reportGeneratorFunction.pieChartPlot(csvData,x,y,color)
+            html = render_template("report.html",
+                user=current_user, 
+                graphJSON = graphJSON)
+
+        elif str(chartType) == "lineplot":
+            graphJSON = reportGeneratorFunction.linePlot(csvData,x,y,color)
+            html = render_template("report.html",
+                user=current_user, 
+                graphJSON = graphJSON)
+
+        elif str(chartType) == "lineareaplot":
+            graphJSON = reportGeneratorFunction.lineAreaPlot(csvData,x,y,color)
+            html = render_template("report.html",
+                user=current_user, 
+                graphJSON = graphJSON)
+
+        elif str(chartType) == "histogramplot":
+            graphJSON = reportGeneratorFunction.histogramPlot(csvData,x,y,color)
+            html = render_template("report.html",
+                user=current_user, 
+                graphJSON = graphJSON)
+
+        elif str(chartType) == "boxplot":
+            graphJSON = reportGeneratorFunction.boxPlot(csvData,x,y,color)
+            html = render_template("report.html",
+                user=current_user, 
+                graphJSON = graphJSON)
+
+        elif str(chartType) == "violinplot":
+            graphJSON = reportGeneratorFunction.violinPlot(csvData,x,y,color)
+            html = render_template("report.html",
+                user=current_user, 
+                graphJSON = graphJSON)
+
+        elif str(chartType) == "heatmapplot":
+            graphJSON = reportGeneratorFunction.heatmapPlot(csvData,x,y,color)
+            html = render_template("report.html",
+                user=current_user, 
+                graphJSON = graphJSON)
+
         else:
             graphJSON = reportGeneratorFunction.scatterPlot(csvData)
             html = render_template("report.html",
@@ -112,7 +155,7 @@ def visualization_and_reporting():
         return html
 
     return render_template("visualization_and_reporting.html",user=current_user, 
-        files=os.listdir('G:\Projekt Inzynierski\csv_data'), 
+        files=os.listdir('C:\py\proj_inz\engineering-project\csv_data'), 
         tables=[tableOf5.to_html()], 
         dataFound = dataFound, 
         columnsNames = columnsNames,
