@@ -78,13 +78,13 @@ def visualization_and_reporting():
       'City': ['SF', 'SF', 'SF', 'Montreal', 'Montreal', 'Montreal']
     })
 
-    tableOf5 = df.head()
+    tableOf5 = data.head()
     columnsNames = reportGeneratorFunction.getColumnsNamesInTable(df)
     form1 = forms.Forms()
     #form1.chartType.choices = 
 
     if request.method == 'POST':
-        csvData = df
+        csvData = data
         oldColumnName = request.form.get('oldName')
         newColumnName = request.form.get('newName')
         chartType = form1.chartType.data
