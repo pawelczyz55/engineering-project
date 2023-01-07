@@ -111,22 +111,10 @@ def visualization_and_reporting():
         
         return html
 
-
-    
-
-
-    fig = px.bar(df, x='Fruit', y='Amount', color='City', 
-        barmode='group')
-    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-
-    # fig2 = px.scatter(data)
-    # graphJSON2 = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
-
     return render_template("visualization_and_reporting.html",user=current_user, 
         files=os.listdir('G:\Projekt Inzynierski\csv_data'), 
         tables=[tableOf5.to_html()], 
         dataFound = dataFound, 
-        graphJSON = graphJSON,
         columnsNames = columnsNames,
         form1 = form1
         )
