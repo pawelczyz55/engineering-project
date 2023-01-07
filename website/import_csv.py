@@ -25,7 +25,7 @@ def upload():
             filename = secure_filename(file.filename)
             new_filename = f'pnewFile.csv'
             #new_filename = f'{filename.split(".")[0]}_newfile.csv'
-            save_location = os.path.join('G:\Projekt Inzynierski\csv_data', new_filename.replace('\\', ''))
+            save_location = os.path.join(r'C:\Users\mjurc\OneDrive\Pulpit\engineering-project\csv_data', new_filename.replace('\\', ''))
             file.save(save_location)
 
         return redirect(url_for('views.visualization_and_reporting'))

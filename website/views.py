@@ -11,9 +11,21 @@ from functions.importCsvData import procces_csv
 
 views = Blueprint('views', __name__)
 
-@views.route('/', methods=['GET', 'POST'])
+@views.route('/', methods=['GET'])
 @login_required
 def home():
+    return render_template("home.html", user=current_user)
+
+@views.route('/notes', methods=['GET', 'POST'])
+@login_required
+def notes():
+    """
+    Function render Notes tab page.
+
+    Return:
+        - string - template name of 'notes.html'
+        - user - data of current loged in user
+    """
     if request.method == 'POST':
         note = request.form.get('note')
 
@@ -26,7 +38,7 @@ def home():
 
             flash("Note added.", category='success')
 
-    return render_template("home.html", user=current_user)
+    return render_template("notes.html", user=current_user )
 
 @views.route('/delete-note', methods=['POST'])
 def delete_note():
@@ -51,7 +63,7 @@ def visualization_and_reporting():
     dataFound = False
 
     try:
-        data = procces_csv('G:\Projekt Inzynierski\csv_data\pnewFile.csv')
+        data = procces_csv(r'C:\Users\mjurc\OneDrive\Pulpit\engineering-project\csv_data\pnewFile.csv')
         dataFound = True
     except FileNotFoundError:
         return render_template("visualization_and_reporting.html",user=current_user, dataFound = dataFound)
@@ -71,7 +83,8 @@ def visualization_and_reporting():
 
     if request.method == 'POST':
         csvData = df
-        newColumsNames = request.form.get('columnNames')
+        oldColumnName = request.form.get('oldName')
+        newColumnName = request.form.get('newName')
         chartType = form1.chartType.data
         #chartType = "scatter"
         x = request.form.get('x')
@@ -80,7 +93,7 @@ def visualization_and_reporting():
 
         #html = generateReport(csvData,newColumsNames, chartType,x,y)
         if newColumsNames != '':
-            csvData = reportGeneratorFunction.renameColumnsName(csvData, newColumsNames)
+            csvData = reportGeneratorFunction.rename_columns(csvData, {oldColumnName:newColumnName})
         if str(chartType) == "scatterplot":
             graphJSON = reportGeneratorFunction.scatterPlot(csvData,x,y,color)
             html = render_template("report.html",
@@ -98,23 +111,20 @@ def visualization_and_reporting():
                 user=current_user, 
                 graphJSON = graphJSON)
 
-        # options = {
-        # "orientation": "landscape",
-        # "page-size": "A4",
-        # "margin-top": "1.0cm",
-        # "margin-right": "1.0cm",
-        # "margin-bottom": "1.0cm",
-        # "margin-left": "1.0cm",
-        # "encoding": "UTF-8",
-        # }
-        # pdf = pdfkit.from_string(html, options)
-        
-        return html
+
+
+
+    fig = px.bar(df, x='Fruit', y='Amount', color='City', 
+        barmode='group')
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+    # fig2 = px.scatter(data)
+    # graphJSON2 = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
 
     return render_template("visualization_and_reporting.html",user=current_user, 
-        files=os.listdir('G:\Projekt Inzynierski\csv_data'), 
+        files=os.listdir(r'C:\Users\mjurc\OneDrive\Pulpit\engineering-project\csv_data'),
         tables=[tableOf5.to_html()], 
         dataFound = dataFound, 
-        columnsNames = columnsNames,
-        form1 = form1
+        graphJSON = graphJSON,
+        avaiable_columns=['one','two','three']
         )
