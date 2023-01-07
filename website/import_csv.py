@@ -26,7 +26,11 @@ def upload():
             new_filename = f'pnewFile.csv'
             save_location = f'csv_data\{new_filename}'
             #new_filename = f'{filename.split(".")[0]}_newfile.csv'
+<<<<<<< HEAD
             #save_location = os.path.join(r'G:\Inzynierka\engineering-project\csv_data', new_filename.replace('\\', ''))
+=======
+            save_location = os.path.join('C:\py\proj_inz\engineering-project\csv_data', new_filename.replace('\\', ''))
+>>>>>>> origin/testing_ms
             file.save(save_location)
 
         return redirect(url_for('views.visualization_and_reporting'))

@@ -107,6 +107,49 @@ def visualization_and_reporting():
             html = render_template("report.html",
                 user=current_user, 
                 graphJSON = graphJSON)
+
+        elif str(chartType) == "piechartplot":
+            graphJSON = reportGeneratorFunction.pieChartPlot(csvData,x,y,color)
+            html = render_template("report.html",
+                user=current_user, 
+                graphJSON = graphJSON)
+
+        elif str(chartType) == "lineplot":
+            graphJSON = reportGeneratorFunction.linePlot(csvData,x,y,color)
+            html = render_template("report.html",
+                user=current_user, 
+                graphJSON = graphJSON)
+
+        elif str(chartType) == "lineareaplot":
+            graphJSON = reportGeneratorFunction.lineAreaPlot(csvData,x,y,color)
+            html = render_template("report.html",
+                user=current_user, 
+                graphJSON = graphJSON)
+
+        elif str(chartType) == "histogramplot":
+            graphJSON = reportGeneratorFunction.histogramPlot(csvData,x,y,color)
+            html = render_template("report.html",
+                user=current_user, 
+                graphJSON = graphJSON)
+
+        elif str(chartType) == "boxplot":
+            graphJSON = reportGeneratorFunction.boxPlot(csvData,x,y,color)
+            html = render_template("report.html",
+                user=current_user, 
+                graphJSON = graphJSON)
+
+        elif str(chartType) == "violinplot":
+            graphJSON = reportGeneratorFunction.violinPlot(csvData,x,y,color)
+            html = render_template("report.html",
+                user=current_user, 
+                graphJSON = graphJSON)
+
+        elif str(chartType) == "heatmapplot":
+            graphJSON = reportGeneratorFunction.heatmapPlot(csvData,x,y,color)
+            html = render_template("report.html",
+                user=current_user, 
+                graphJSON = graphJSON)
+
         else:
             graphJSON = reportGeneratorFunction.scatterPlot(csvData)
             html = render_template("report.html",
