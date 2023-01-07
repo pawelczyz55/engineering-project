@@ -1,5 +1,6 @@
 from flask import Blueprint, flash, render_template, request, flash, jsonify, url_for, redirect
 from flask_login import login_required, current_user
+from functions import statsCsv
 from .models import Note
 from . import db
 import json
@@ -16,9 +17,6 @@ test = Blueprint('test', __name__)
 @login_required
 def testowy():
     df = px.data.iris()
-    fig = px.scatter(df, x="sepal_width", y="sepal_length", color="species", marginal_y="violin",
-           marginal_x="box", trendline="ols", template="simple_white")
+    stats = statsCsv.file_statistics(df)
 
-    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-
-    return render_template("testowy.html",user=current_user, graphJSON = graphJSON)
+    return render_template("testowy.html", stats)

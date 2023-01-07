@@ -1,5 +1,6 @@
 from flask import Blueprint, flash, render_template, request, flash, jsonify, url_for, redirect, make_response
 from flask_login import login_required, current_user
+from functions import statsCsv
 from .models import Note
 from . import db
 import json
@@ -39,6 +40,14 @@ def notes():
             flash("Note added.", category='success')
 
     return render_template("notes.html", user=current_user )
+
+@views.route('/test', methods=['POST', 'GET'])
+@login_required
+def testowy():
+    df = px.data.iris()
+    stats = statsCsv.file_statistics(df)
+ 
+    return render_template("testowy.html", stats=[stats.to_html()] )
 
 @views.route('/delete-note', methods=['POST'])
 def delete_note():
