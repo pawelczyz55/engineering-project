@@ -7,7 +7,6 @@ from .views import views
 
 importCsv = Blueprint('import_csv', __name__)
 
-ROOT_DIR = os.path.dirname(os.path.abspath("main.py"))
 ALLOWED_EXTENSIONS = set(['csv'])
 
 def allowed_file(filename):
