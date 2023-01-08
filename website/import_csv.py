@@ -21,6 +21,7 @@ def allowed_file(filename):
 def upload():
     if request.method == 'POST':
         file = request.files['file']
+        separator = request.form.get('separator')
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             new_filename = f'pnewFile.csv'
