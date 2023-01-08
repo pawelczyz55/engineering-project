@@ -15,10 +15,18 @@ test = Blueprint('test', __name__)
 @test.route('/test', methods=['POST', 'GET'])
 @login_required
 def testowy():
-    df = px.data.iris()
-    fig = px.scatter(df, x="sepal_width", y="sepal_length", color="species", marginal_y="violin",
-           marginal_x="box", trendline="ols", template="simple_white")
+       if request.method == 'POST':
+              xs = request.form.getlist('x[]')
+              print(xs)
+              ys = request.form.getlist('y[]')
+              print(ys)
+              colors = request.form.getlist('color[]')
+              print(colors)
+              return render_template("testowyraport.html",user=current_user, x = xs, y=ys, colors=colors)
 
-    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+#     df = px.data.iris()
+#     fig = px.scatter(df, x="sepal_width", y="sepal_length", color="species", marginal_y="violin",
+#            marginal_x="box", trendline="ols", template="simple_white")
 
-    return render_template("testowy.html",user=current_user, graphJSON = graphJSON)
+#     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+       return render_template("testowy.html",user=current_user)
