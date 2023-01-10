@@ -80,87 +80,68 @@ def visualization_and_reporting():
 
     tableOf5 = df.head()
     columnsNames = reportGeneratorFunction.getColumnsNamesInTable(df)
+    optionsChart = ["barplot", "scatterplot", "piechartplot", "lineplot", "lineareaplot", "histogramplot", "boxplot", "violinplot", "heatmapplot"]
     form1 = forms.Forms()
+    tablesTest=[tableOf5.to_html()]
     #form1.chartType.choices = 
 
     if request.method == 'POST':
         csvData = df
         oldColumnName = request.form.get('oldName')
         newColumnName = request.form.get('newName')
-        chartType = form1.chartType.data
-        #chartType = "scatter"
-        x = request.form.get('x')
-        y = request.form.get('y')
-        color = request.form.get('color')
+        chartsType = request.form.getlist('optionChartSelected[]')
+        print(chartsType)
 
-        #html = generateReport(csvData,newColumsNames, chartType,x,y)
-        if newColumnName != '': # to jeszcze nie dziala
-            csvData = reportGeneratorFunction.rename_columns(csvData, {oldColumnName:newColumnName})
-        if str(chartType) == "scatterplot":
-            graphJSON = reportGeneratorFunction.scatterPlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
+        #multiple charts parameters in array
+        xNames = request.form.getlist('x[]')
+        yNames = request.form.getlist('y[]')
+        colors = request.form.getlist('color[]')
 
-        elif str(chartType) == "barplot":
-            graphJSON = reportGeneratorFunction.barPlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
+        graphJSONtable = []
+        for i in range(len(chartsType)):
+            if str(chartsType[i]) == "scatterplot":
+                graphJSON = reportGeneratorFunction.scatterPlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
 
-        elif str(chartType) == "piechartplot":
-            graphJSON = reportGeneratorFunction.pieChartPlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
+            elif str(chartsType[i]) == "barplot":
+                graphJSON = reportGeneratorFunction.barPlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
 
-        elif str(chartType) == "lineplot":
-            graphJSON = reportGeneratorFunction.linePlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
+            elif str(chartsType[i]) == "piechartplot":
+                graphJSON = reportGeneratorFunction.pieChartPlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
 
-        elif str(chartType) == "lineareaplot":
-            graphJSON = reportGeneratorFunction.lineAreaPlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
+            elif str(chartsType[i]) == "lineplot":
+                graphJSON = reportGeneratorFunction.linePlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
 
-        elif str(chartType) == "histogramplot":
-            graphJSON = reportGeneratorFunction.histogramPlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
+            elif str(chartsType[i]) == "lineareaplot":
+                graphJSON = reportGeneratorFunction.lineAreaPlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
 
-        elif str(chartType) == "boxplot":
-            graphJSON = reportGeneratorFunction.boxPlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
+            elif str(chartsType[i]) == "histogramplot":
+                graphJSON = reportGeneratorFunction.histogramPlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
 
-        elif str(chartType) == "violinplot":
-            graphJSON = reportGeneratorFunction.violinPlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
+            elif str(chartsType[i]) == "boxplot":
+                graphJSON = reportGeneratorFunction.boxPlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
 
-        elif str(chartType) == "heatmapplot":
-            graphJSON = reportGeneratorFunction.heatmapPlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
+            elif str(chartsType[i]) == "violinplot":
+                graphJSON = reportGeneratorFunction.violinPlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
 
-        else:
-            graphJSON = reportGeneratorFunction.scatterPlot(csvData)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
-        
+            elif str(chartsType[i]) == "heatmapplot":
+                graphJSON = reportGeneratorFunction.heatmapPlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
+
+            else:
+                graphJSON = reportGeneratorFunction.scatterPlot(csvData)
+                graphJSONtable.append(graphJSON)
+
+        #print(graphJSONtable)
+        html = render_template("report.html", user=current_user, graphJSON = graphJSONtable[0])
         return html
-
-
-
-
 
 
     fig = px.bar(df, x='Fruit', y='Amount', color='City', 
@@ -176,5 +157,6 @@ def visualization_and_reporting():
         dataFound = dataFound, 
         graphJSON = graphJSON,
         avaiable_columns= df.columns,
+        optionsToSelect = optionsChart,
         form1 = form1
         )

@@ -17,4 +17,11 @@
         Plotly.plot('chart',graphs,{});
     </script>
 
+    <script>
+        let g1 = {{graphJSON | safe}};
+        for (i in g1){ 
+            Plotly.plot('chartAvg'+i, g1[i].data, g1[i].layout || {}); 
+        }
+    </script>
+
 {% endblock %}
