@@ -4,7 +4,7 @@
     <h1 align="center">Generated report</h1>
 
     <div>
-        <div id='chart' class='chart'”></div>
+        <div id='chart' class='chart'></div>
         <p>
             Testowy wykres
         </p>
@@ -18,7 +18,7 @@
     </script>
 
     <script>
-        let g1 = {{graphJSON | safe}};
+        let g1 = {{graphJSONtable | safe}};
         for (i in g1){ 
             Plotly.plot('chartAvg'+i, g1[i].data, g1[i].layout || {}); 
         }

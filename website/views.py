@@ -140,7 +140,7 @@ def visualization_and_reporting():
                 graphJSONtable.append(graphJSON)
 
         #print(graphJSONtable)
-        html = render_template("report.html", user=current_user, graphJSON = graphJSONtable[0])
+        html = render_template("report.html", user=current_user, graphJSONtable = graphJSONtable, graphJSON = graphJSONtable[0])
         return html
 
 

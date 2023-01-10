@@ -22,6 +22,7 @@
                 //add input box
 
                 $(InputsWrapper).append('<div>'+
+                    '<hr width="100%"/>'+
                     '<div class="plot-option-choose">'+
                     '<label> Choose your chart '+FieldCount+': </label> '+
                     '<br/>'+
@@ -136,20 +137,6 @@
     <div class="addMoreForms">
         <button type="button" name="add" id="AddMoreFileBox" class="btn btn-success">Add More</button>
     </div>
-
-    <div>
-        <div id='chart' class='chart'”></div>
-        <p> </p>
-    </div>
-
-    <br/>
-    <br/>
-    
-    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-    <script type='text/javascript'>
-        var graphs = {{graphJSON | safe}};
-        Plotly.plot('chart',graphs,{});
-    </script>
 
     {% else %}
     <div style="text-align:center;">
