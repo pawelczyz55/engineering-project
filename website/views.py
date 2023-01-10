@@ -1,13 +1,16 @@
-from flask import Blueprint, flash, render_template, request, flash, jsonify, url_for, redirect, make_response
-from flask_login import login_required, current_user
-from .models import Note
-from . import db
 import json
 import os
 import pandas as pd
 import pdfkit
+import plotly
+import plotly.express as px
 
+from flask import Blueprint, flash, render_template, request, flash, jsonify, url_for, redirect, make_response
+from flask_login import login_required, current_user
+from functions import reportGeneratorFunction, forms
 from functions.importCsvData import procces_csv
+from .models import Note
+from . import db, db_connector
 
 views = Blueprint('views', __name__)
 
@@ -41,6 +44,7 @@ def notes():
     return render_template("notes.html", user=current_user )
 
 @views.route('/delete-note', methods=['POST'])
+@login_required
 def delete_note():
     note = json.loads(request.data)
     noteId = note['noteId']
@@ -52,20 +56,22 @@ def delete_note():
 
     return jsonify({})
 
-
-import plotly
-import plotly.express as px
-from functions import reportGeneratorFunction, forms
+@views.route('/reports', methods=['POST', 'GET'])
+@login_required
+def reports():
+    return render_template("reports.html", user=current_user)
 
 @views.route('/visualization-and-reporting', methods=['POST', 'GET'])
 @login_required
 def visualization_and_reporting():
     dataFound = False
     filename = 'pnewFile.csv'
-    location = f'csv_data\{filename}'
+    #location = f'csv_data\{filename}'
+    location = f'csv_data\\{filename}'.replace('\\', '')
 
     try:
-        data = procces_csv(location)
+        # data = procces_csv(location)
+        data = pd.read_sql_table('test', db_connector)
         dataFound = True
     except FileNotFoundError:
         return render_template("visualization_and_reporting.html",user=current_user, dataFound = dataFound)
@@ -78,19 +84,19 @@ def visualization_and_reporting():
       'City': ['SF', 'SF', 'SF', 'Montreal', 'Montreal', 'Montreal']
     })
 
-    tableOf5 = df.head()
-    columnsNames = reportGeneratorFunction.getColumnsNamesInTable(df)
+    tableOf5 = data.head()
+    columnsNames = reportGeneratorFunction.getColumnsNamesInTable(data)
     form1 = forms.Forms()
     #form1.chartType.choices = 
 
     if request.method == 'POST':
-        csvData = df
+        csvData = data
         oldColumnName = request.form.get('oldName')
         newColumnName = request.form.get('newName')
         chartType = form1.chartType.data
         #chartType = "scatter"
-        x = request.form.get('x')
-        y = request.form.get('y')
+        x = str(request.form.get('x'))
+        y = str(request.form.get('y'))
         color = request.form.get('color')
 
         #html = generateReport(csvData,newColumsNames, chartType,x,y)
@@ -158,11 +164,6 @@ def visualization_and_reporting():
         
         return html
 
-
-
-
-
-
     fig = px.bar(df, x='Fruit', y='Amount', color='City', 
         barmode='group')
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
@@ -171,10 +172,30 @@ def visualization_and_reporting():
     # graphJSON2 = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
 
     return render_template("visualization_and_reporting.html",user=current_user, 
-        files=os.listdir(r'csv_data'),
+        #files=os.listdir(r'csv_data'),
+        files=os.listdir(r'C:\Users\mjurc\OneDrive\Pulpit\engineering-project\csv_data'),
         tables=[tableOf5.to_html()], 
         dataFound = dataFound, 
         graphJSON = graphJSON,
-        avaiable_columns= df.columns,
+        avaiable_columns= data.columns,
         form1 = form1
         )
+
+@views.route('/rename-column', methods=['POST'])
+@login_required
+def rename_column():
+    # get_data = json.loads(request.data)
+    # df=get_data[0]
+    # dictionary = {get_data[1],get_data[2]}
+    # dataFound = False
+    # filename = 'pnewFile.csv'
+    # #location = f'csv_data\{filename}'
+    # location = f'csv_data\\{filename}'.replace('\\', '')
+
+    # try:
+    #     data = procces_csv(location)
+    #     dataFound = True
+    # except FileNotFoundError:
+    #     return render_template("visualization_and_reporting.html",user=current_user, dataFound = dataFound)
+
+    return jsonify({})

@@ -16,3 +16,9 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
     notes = db.relationship('Note')
+    tables = db.relationship('Table')
+
+class Table(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name =  db.Column(db.String(8), unique=True)
+    owner_id =  db.Column(db.ForeignKey("user.id"))
