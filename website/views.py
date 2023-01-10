@@ -43,6 +43,14 @@ def notes():
 
     return render_template("notes.html", user=current_user )
 
+@views.route('/test', methods=['POST', 'GET'])
+@login_required
+def testowy():
+    df = px.data.iris()
+    stats = statsCsv.file_statistics(df)
+ 
+    return render_template("testowy.html", stats=[stats.to_html()] )
+
 @views.route('/delete-note', methods=['POST'])
 @login_required
 def delete_note():
