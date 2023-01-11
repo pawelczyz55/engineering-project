@@ -1,0 +1,43 @@
+{% block table %}
+<div id="mainAddCharts">
+    <label id="lblQuantityCharts">Enter quantity of charts</label>
+    <input type="text" id="txtQuantityCharts"/>
+    <input type="button" value="CREATE" id="btnQuantityCharts">
+</div>
+
+<table>
+    <tr>
+        <th> S.No</th>
+        <th> First Name</th>
+        <th> Last Name</th>
+        <th> Gender</th>
+        <th> City</th>
+    </tr>
+
+    <tr>
+        <td>
+            <input type="text" id="txtFName" placeholder="First Name" autofocus/>
+        </td>
+
+        <td>
+            <input type="text" id="txtLName" placeholder="Last Name" autofocus/>
+        </td>
+
+        <td>
+            <input type="radio" name="Gender" value="M"/>
+            <input type="radio" name="Gender" value="F"/>
+        </td>
+
+        <td>
+            <select id="ddlCity">
+                <option value="0"> - Select City - </option>
+                <option value="1"> - Baroda - </option>
+                <option value="2"> - Warsaw - </option>
+                <option value="3"> - Testing3 - </option>
+                <option value="4"> - Testing4- </option>
+                <option value="5"> - Testing5 - </option>
+            </select>
+        </td>
+    </tr>
+</table>
+{% endblock %}

@@ -1,3 +1,68 @@
-h1{
-    color: black;
+footer{
+    position: fixed;
+    height: 5vh;
+    bottom: 0;
+    padding: 1px;
+    width: 100%;
+
+    background-color: #343a40!important;
+    text-align: center;
+    color:#fff;
+}
+
+footer h2{
+    font-size:medium;
+}
+
+footer h3{
+    color: #fff;
+    font-size: small;
+}
+
+.addMoreForms{
+    padding-top: 10px;
+    padding-bottom: 50px;
+}
+
+.row {
+    padding: 0px;
+}
+
+.plot-option-choose{
+    padding-left: 10px ;
+}
+
+.chartsOptionFields{
+    display: flex;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+}
+
+.field-labels-first{
+    display: flex;
+    margin-top: 5px;
+    padding-right: 10px;
+}
+
+.field-labels{
+    display: flex;
+    margin-top: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.input-field-parameters{
+    width: 220px;
+    border: 2px solid gray;
+    border-radius: 4px;
+}
+
+#parameters-label{
+    padding: 10px 0px 0px 10px;
+}
+
+.dataframe{
+    margin: 50px;
+    text-align: center;
 }

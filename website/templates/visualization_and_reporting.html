@@ -1,6 +1,75 @@
 {% extends "base.html" %} {% block title %}Visualisation{% endblock %} 
 {% block content %}
 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> 
+
+<script>
+    $(document).ready(function() {
+      
+    var MaxCharts       = 8; //maximum input boxes allowed
+    var InputsWrapper   = $("#InputsWrapper"); //Input boxes wrapper ID
+    var AddButton       = $("#AddMoreFileBox"); //Add button ID
+      
+    var x = InputsWrapper.length; //initlal text box count
+    var FieldCount=1; //to keep track of text box added
+      
+    $(AddButton).click(function (e)  //on add input button click
+    {
+            if(x <= MaxCharts) //max input box allowed
+            {
+                FieldCount++; //text box added increment
+                //add input box
+
+                $(InputsWrapper).append('<div>'+
+                    '<hr width="100%"/>'+
+                    '<div class="plot-option-choose">'+
+                    '<label> Choose your chart '+FieldCount+': </label> '+
+                    '<br/>'+
+                    '<select class="form-select form-select-sm"'+
+                        'aria-label=".form-select-sm example"'+
+                        'id="select-column-to-change_'+FieldCount+'"'+
+                        'name="optionChartSelected[]"'+
+                        'style="height: 35px;">'+
+                        '<option selected>Select chart type</option>'+
+                        '{% for optionToSelect in optionsToSelect %} '+
+                            '<option value= {{ optionToSelect }} >{{optionToSelect}}</option>'+
+                        '{% endfor %}'+
+                    '</select>'+
+                '</div>'+
+                '<label id="parameters-label"> Choose your parameters: </label> '+
+                '<div class="chartsOptionFields">'+
+
+                    '<label class="field-labels-first" for="x_'+FieldCount+'">X_'+FieldCount+':</label>'+
+                    '<input type="text" class="input-field-parameters" id="x_'+FieldCount+'" name="x[]" placeholder="Enter your X_'+FieldCount+'(column name)"/>'+
+
+                    '<label class="field-labels" for="y_'+FieldCount+'">Y_'+FieldCount+':</label>'+
+                    '<input type="text" class="input-field-parameters" id="y_'+FieldCount+'" name="y[]" placeholder="Enter your Y_'+FieldCount+'(column name)"/>'+
+
+                    '<label class="field-labels" for="color_'+FieldCount+'">color by column:</label>'+
+                    '<input type="text" class="input-field-parameters" id="color_'+FieldCount+'" name="color[]" placeholder="Optional '+FieldCount+'(column name)"/>'+
+
+                '<div style="display: none;"></div>'+
+                '</div>'+
+                '<a href="#" class="btn btn-danger removeclass">×</a>'+
+                '</div>');
+                x++; //text box increment
+            }
+    return false;
+    });
+      
+    $("body").on("click",".removeclass", function(e){ //user click on remove text
+            if( x > 1 ) {
+                    $(this).parent('div').remove(); //remove text box
+                    x--; //decrement textbox
+                    FieldCount--;
+            }
+    return false;})
+    });
+</script>
+
+
+
     {% if dataFound %}
     <h1 align="center">Visualization and reporting creator</h1>
     <div style="text-align:center;">
@@ -28,104 +97,46 @@
         <p>{{ columnsNames }} </p>
     </div>
 
-    <form method="POST">
+    <h3 align="center"> Add your charts </h3>
         <div class="form-group">
-            <input type="checkbox" id="transformation" name="perform-transformation-of-dataframe"/>
-            <label for="transformation">Transform Data Frame</label><br>
-        </div>
-
-        <div class="form-group ">
-            <h5> Rename column:</h5>
-            <div class="form-row align-items-center">
-                <div class="form-group col-auto my-1">
-                    <label for="select-column-to-change">Column to rename:</label>
-                    <select class="form-select form-select-sm"
+            <form method="POST" name="add_charts" id="add_charts">
+                <div id="InputsWrapper">
+                    <div class="plot-option-choose">
+                        <label> Choose your chart: </label> 
+                        <br/>
+                        <select class="form-select form-select-sm"
                             aria-label=".form-select-sm example"
                             id="select-column-to-change"
-                            name="oldName"
+                            name="optionChartSelected[]"
                             style="height: 35px;">
-                        <option selected>Select column</option>
-                        {% for column in avaiable_columns %} 
-                            <option value="@column.id">{{column}}</option>
-                        {% endfor %}
-                    </select>
+                            <option selected>Select chart type</option>
+                            {% for optionToSelect in optionsToSelect %} 
+                                <option value= {{ optionToSelect }} >{{optionToSelect}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <label id="parameters-label"> Choose your parameters: </label> 
+                    <div class="chartsOptionFields">
+
+                        <label class="field-labels-first" for="x">X:</label>
+                        <input type="text" class="input-field-parameters" id="x" name="x[]" placeholder="Enter your X(column name)"/>
+
+                        <label class="field-labels" for="y">Y:</label>
+                        <input type="text" class="input-field-parameters" id="y" name="y[]" placeholder="Enter your Y(column name)"/>
+
+                        <label class="field-labels" for="color">color by column:</label>
+                        <input type="text" class="input-field-parameters" id="color" name="color[]" placeholder="Optional(column name)"/>
+
+                    </div>
+                <div style="display: none;"></div>
                 </div>
-                <div class="form-inline col-auto my-1">
-                    <label for="newName">New name:  </label>
-                    <input type="text" class="form-control"
-                        id="new-name" name="newName" placeholder="Enter new name">
-                </div>
-                <div class="col-auto my-1">
-                    <button type="submit" class="btn btn-success btn-sm disable"
-                            id="perform-column-rename"
-                            onclick="rename_column(request.form.get('oldName'),request.form.get('newName'))">
-                    Apply
-                </button>
-                </div>
-            </div>
-        </div>
+                <input type="submit" name="submit" id="submit" class="btn btn-info" value="Generate report" />
 
-        <label> Choose your chart: </label> 
-        <br/>
-        {{ form1.csrf_token }}
-        {{ form1.chartType }}
-        <br/><br/>
+            </form>
 
-        <div class="form-group">
-            <label for="x">X:</label>
-            <input 
-                type="text" 
-                class="form-control" 
-                id="x"
-                name="x" 
-                placeholder="Enter your X(column name)"
-            />
-        </div>
-
-        <div class="form-group">
-            <label for="y">Y:</label>
-            <input 
-                type="text" 
-                class="form-control" 
-                id="y"
-                name="y" 
-                placeholder="Enter your Y(column name)"
-            />
-        </div>
-
-        <div class="form-group">
-            <label for="color">color by column:</label>
-            <input 
-                type="text" 
-                class="form-control" 
-                id="color"
-                name="color" 
-                placeholder="Optional(column name)"
-            />
-        </div>
-
-        <div align="center">
-            <button type="submit" class="btn btn-primary"> Generate report </button>
-        </div>
-    </form>
-
-    
-
-    <div>
-        <div id='chart' class='chart'”></div>
-        <p>
-            
-        </p>
+    <div class="addMoreForms">
+        <button type="button" name="add" id="AddMoreFileBox" class="btn btn-success">Add More</button>
     </div>
-
-    <br/>
-    <br/>
-    
-    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-    <script type='text/javascript'>
-        var graphs = {{graphJSON | safe}};
-        Plotly.plot('chart',graphs,{});
-    </script>
 
     {% else %}
     <div style="text-align:center;">

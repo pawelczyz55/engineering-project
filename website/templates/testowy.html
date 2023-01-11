@@ -1,17 +1,76 @@
 {% extends "base.html" %} {% block title %}Testowy{% endblock %} 
 {% block content %}
 
-    <h1 align="center">Statystyki kolumn</h1>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> 
 
-    <div align="center">
-        <table>
-            <h1>
-            <!--Displaying the converted table-->
-                {% for table in stats %}                          
-                {{ table|safe }}
-                {% endfor %}
-            </h1> 
-        </table>
+<script>
+    $(document).ready(function() {
+      
+    var MaxInputs       = 8; //maximum input boxes allowed
+    var InputsWrapper   = $("#InputsWrapper"); //Input boxes wrapper ID
+    var AddButton       = $("#AddMoreFileBox"); //Add button ID
+      
+    var x = InputsWrapper.length; //initlal text box count
+    var FieldCount=1; //to keep track of text box added
+      
+    $(AddButton).click(function (e)  //on add input button click
+    {
+            if(x <= MaxInputs) //max input box allowed
+            {
+                FieldCount++; //text box added increment
+                //add input box
+                $(InputsWrapper).append('<div class="row">'+
+                '<label for="x_'+FieldCount+'">X_'+FieldCount+':</label>'+
+                '<input type="text" class="form-control" id="x_'+FieldCount+'" name="x[]" placeholder="Enter your X_'+FieldCount+'(column name)"/>'+
+
+                '<label for="y_'+FieldCount+'">Y_'+FieldCount+':</label>'+
+                '<input type="text" class="form-control" id="y_'+FieldCount+'" name="y[]" placeholder="Enter your Y_'+FieldCount+'(column name)"/>'+
+
+                '<label for="color_'+FieldCount+'">color by column:</label>'+
+                '<input type="text" class="form-control" id="color_'+FieldCount+'" name="color[]" placeholder="Optional '+FieldCount+'(column name)"/>'+
+
+                '<a href="#" class="btn btn-danger removeclass">×</a>' +
+                '</div>');
+                x++; //text box increment
+            }
+    return false;
+    });
+      
+    $("body").on("click",".removeclass", function(e){ //user click on remove text
+            if( x > 1 ) {
+                    $(this).parent('div').remove(); //remove text box
+                    x--; //decrement textbox
+            }
+    return false;})
+    });
+    </script>
+
+    <div id="chartGenerator">
+        <br />
+        <br />
+        <h3 align="center"> Add your charts </h3>
+        <div class="form-group">
+            <form method="POST" name="add_charts" id="add_charts">
+                <div id="InputsWrapper">
+                    <div class="row">
+
+                        <label for="x">X:</label>
+                        <input type="text" class="form-control" id="x" name="x[]" placeholder="Enter your X(column name)"/>
+
+                        <label for="y">Y:</label>
+                        <input type="text" class="form-control" id="y" name="y[]" placeholder="Enter your Y(column name)"/>
+
+                        <label for="color">color by column:</label>
+                        <input type="text" class="form-control" id="color" name="color[]" placeholder="Optional(column name)"/>
+
+                    </div>
+                </div>
+                <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit" />
+
+            </form>
+            <div class="addMoreForms"><button type="button" name="add" id="AddMoreFileBox" class="btn btn-success">Add More</button></div>
+        </div>
     </div>
 
 {% endblock %}
