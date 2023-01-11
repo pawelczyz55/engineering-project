@@ -4,8 +4,10 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
 from .views import views
-from . import db, db_connector
-from pandas import read_csv
+from . import db
+import pandas as pd
+from sqlalchemy import exc
+import csv
 
 importCsv = Blueprint('import_csv', __name__)
 
@@ -15,8 +17,6 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# def table_exist(file_name: str):
-
 
 @importCsv.route('/upload', methods=['GET', 'POST'])
 @login_required
@@ -25,30 +25,22 @@ def upload():
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            new_filename = f'pnewFile.csv'
-            #save_location = f'csv_data\{new_filename}'
-            save_location = f'csv_data\\{new_filename}'.replace('\\', '')
-            #new_filename = f'{filename.split(".")[0]}_newfile.csv'
-            #save_location = os.path.join('csv_data', new_filename.replace('\\', '\'))
-            #file.save(save_location)
-            file.save(r'C:\Users\mjurc\OneDrive\Pulpit\engineering-project\csv_data\pnewFile.csv')
-
-
-            # Read data from CSV and load into a dataframe object
-            tmp = request.form.get('if_use_first_row_as_column')
+            # Read file to pandas
             if request.form.get('if_use_first_row_as_column')!='on':
-                #col_nb = pd.read_csv(file, nrows=1).shape[1]
-                cols2 = read_csv(r'C:\Users\mjurc\OneDrive\Pulpit\engineering-project\csv_data\pnewFile.csv', nrows=1, sep=';')
-                col_nb = cols2.shape[1]
-                columns = [f'column {i}' for i in range(1,col_nb+1)]
-                #data = read_csv(file, names=columns)
-                data = read_csv(r'C:\Users\mjurc\OneDrive\Pulpit\engineering-project\csv_data\pnewFile.csv', names=columns, sep=';')
+                data = pd.read_csv(file,header=None, sep=';')
+                data.columns = [f'column {i}' for i in range(1,data.shape[1]+1)]
             else:
-                #data = read_csv(file)
-                data = read_csv(r'C:\Users\mjurc\OneDrive\Pulpit\engineering-project\csv_data\pnewFile.csv')
+                data = pd.read_csv(file)
             
-            # Write data into the table in PostgreSQL database
-            data.to_sql('test', db_connector)
+            # Write data into the table in SQLite database
+            try:
+                engine = db.get_engine()
+                connnection = engine.connect()
+                data.to_sql('test', connnection, if_exists='replace', index=False)
+                connnection.close()
+            except (exc.ArgumentError, exc.DatabaseError):
+                 pass
+            
 
         return redirect(url_for('views.visualization_and_reporting'))
 

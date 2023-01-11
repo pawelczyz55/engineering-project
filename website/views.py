@@ -7,10 +7,11 @@ import plotly.express as px
 
 from flask import Blueprint, flash, render_template, request, flash, jsonify, url_for, redirect, make_response
 from flask_login import login_required, current_user
-from functions import reportGeneratorFunction, forms
+from functions import reportGeneratorFunction, forms, statsCsv
 from functions.importCsvData import procces_csv
 from .models import Note
-from . import db, db_connector
+from . import db
+from sqlalchemy import exc
 
 views = Blueprint('views', __name__)
 
@@ -73,15 +74,12 @@ def reports():
 @login_required
 def visualization_and_reporting():
     dataFound = False
-    filename = 'pnewFile.csv'
-    #location = f'csv_data\{filename}'
-    location = f'csv_data\\{filename}'.replace('\\', '')
-
     try:
-        # data = procces_csv(location)
-        data = pd.read_sql_table('test', db_connector)
+        db_connector = db.get_engine().connect()
+        data = pd.read_sql('test', db_connector)
         dataFound = True
-    except FileNotFoundError:
+        db_connector.close()
+    except (exc.SQLAlchemyError, exc.DatabaseError):
         return render_template("visualization_and_reporting.html",user=current_user, dataFound = dataFound)
 
     #Testowe dane
@@ -195,10 +193,6 @@ def rename_column():
     # get_data = json.loads(request.data)
     # df=get_data[0]
     # dictionary = {get_data[1],get_data[2]}
-    # dataFound = False
-    # filename = 'pnewFile.csv'
-    # #location = f'csv_data\{filename}'
-    # location = f'csv_data\\{filename}'.replace('\\', '')
 
     # try:
     #     data = procces_csv(location)

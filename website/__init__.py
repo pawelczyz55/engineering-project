@@ -3,11 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from os import path
 from flask_login import LoginManager
-from sqlalchemy_utils import database_exists, create_database
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
-db_connector = ''
 
 def create_app():
     app = Flask(__name__)
@@ -29,10 +27,6 @@ def create_app():
 
     with app.app_context():
         db.create_all()
-
-    engine = create_engine(f"sqlite:///{DB_NAME}")
-    #engine = db.get_engine()
-    db_connector = engine.connect()
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
