@@ -80,33 +80,20 @@ def visualization_and_reporting():
     except (exc.SQLAlchemyError, exc.DatabaseError):
         return render_template("visualization_and_reporting.html",user=current_user, dataFound = dataFound)
 
-    #Testowe dane
-    df = pd.DataFrame({
-      'Fruit': ['Apples', 'Oranges', 'Bananas', 'Apples', 'Oranges', 
-      'Bananas'],
-      'Amount': [4, 1, 2, 2, 4, 5],
-      'City': ['SF', 'SF', 'SF', 'Montreal', 'Montreal', 'Montreal']
-    })
-
     tableOf5 = data.head()
     columnsNames = reportGeneratorFunction.getColumnsNamesInTable(data)
+    optionsChart = ["barplot", "scatterplot", "piechartplot", "lineplot", "lineareaplot", "histogramplot", "boxplot", "violinplot", "heatmapplot"]
     form1 = forms.Forms()
     #form1.chartType.choices = 
 
     if request.method == 'POST':
         csvData = data
-        # oldColumnName = request.form.get('oldName')
-        # newColumnName = request.form.get('newName')
         chartsType = request.form.getlist('optionChartSelected[]')
 
         #multiple charts parameters in array
         xNames = request.form.getlist('x[]')
         yNames = request.form.getlist('y[]')
         colors = request.form.getlist('color[]')
-
-        #html = generateReport(csvData,newColumsNames, chartType,x,y)
-        # if newColumnName != '': # to jeszcze nie dziala
-        #     csvData = reportGeneratorFunction.rename_columns(csvData, {oldColumnName:newColumnName})
         
         graphJSONtable = []
         for i in range(len(chartsType)):
@@ -154,21 +141,23 @@ def visualization_and_reporting():
         html = render_template("report.html", user=current_user, graphJSONtable = graphJSONtable, graphJSON = graphJSONtable[0])
         return html
 
-
+    #Testowe dane
+    df = pd.DataFrame({
+      'Fruit': ['Apples', 'Oranges', 'Bananas', 'Apples', 'Oranges', 
+      'Bananas'],
+      'Amount': [4, 1, 2, 2, 4, 5],
+      'City': ['SF', 'SF', 'SF', 'Montreal', 'Montreal', 'Montreal']
+    })
     fig = px.bar(df, x='Fruit', y='Amount', color='City', 
-        barmode='group')
+        barmode='group')    
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
-    # fig2 = px.scatter(data)
-    # graphJSON2 = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
-
     return render_template("visualization_and_reporting.html",user=current_user, 
-        #files=os.listdir(r'csv_data'),
-        files=os.listdir(r'C:\Users\mjurc\OneDrive\Pulpit\engineering-project\csv_data'),
         tables=[tableOf5.to_html()], 
         dataFound = dataFound, 
         graphJSON = graphJSON,
-        avaiable_columns= data.columns,
+        avaiable_columns= df.columns,
+        optionsToSelect = optionsChart,
         form1 = form1
         )
 
