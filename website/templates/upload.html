@@ -1,19 +1,24 @@
 {% extends "base.html" %} {% block title %}Upload{% endblock %} 
 {% block content %}
 <h1 align="center">Upload form</h1>
+<br/>
 <div style="text-align:center;">
     <form action="/upload" method="POST" enctype="multipart/form-data">
+        <label for="file">File</label>
         <div class="form-group">
-            <label for="file">File</label>
-            <input type="file" id="file" name="file"/><br />
-        <input type="text" id="text" name="separator"/><br />
+            <input type="file" id="file" name="file"/>
         </div> 
+        
+        <br /><br/>
         <div class="form-group">
+            <label for="separator">Separator:</label>
+            <input type="text" id="text" name="separator" value=";" style="width:30px;"/>
+            <br />
             <input type="checkbox" id="use-first-row" name="if_use_first_row_as_column"/>
             <label for="use-first-row">Use first row as column name</label><br>
         </div>
-        <br/><br/>
-        <button>Upload</button>
+        <br/>
+        <button class="btn btn-success btn-lg">Upload</button>
     </form>
 </div>
 

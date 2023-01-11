@@ -1,16 +1,14 @@
+from flask import Blueprint, flash, render_template, request, flash, jsonify, url_for, redirect, make_response
+from flask_login import login_required, current_user
+from functions import reportGeneratorFunction, forms, statsCsv
+from .models import Note
+from . import db
 import json
 import os
 import pandas as pd
 import pdfkit
 import plotly
 import plotly.express as px
-
-from flask import Blueprint, flash, render_template, request, flash, jsonify, url_for, redirect, make_response
-from flask_login import login_required, current_user
-from functions import reportGeneratorFunction, forms, statsCsv
-from functions.importCsvData import procces_csv
-from .models import Note
-from . import db
 from sqlalchemy import exc
 
 views = Blueprint('views', __name__)
@@ -97,78 +95,65 @@ def visualization_and_reporting():
 
     if request.method == 'POST':
         csvData = data
-        oldColumnName = request.form.get('oldName')
-        newColumnName = request.form.get('newName')
-        chartType = form1.chartType.data
-        #chartType = "scatter"
-        x = str(request.form.get('x'))
-        y = str(request.form.get('y'))
-        color = request.form.get('color')
+        # oldColumnName = request.form.get('oldName')
+        # newColumnName = request.form.get('newName')
+        chartsType = request.form.getlist('optionChartSelected[]')
+
+        #multiple charts parameters in array
+        xNames = request.form.getlist('x[]')
+        yNames = request.form.getlist('y[]')
+        colors = request.form.getlist('color[]')
 
         #html = generateReport(csvData,newColumsNames, chartType,x,y)
-        if newColumnName != '': # to jeszcze nie dziala
-            csvData = reportGeneratorFunction.rename_columns(csvData, {oldColumnName:newColumnName})
-        if str(chartType) == "scatterplot":
-            graphJSON = reportGeneratorFunction.scatterPlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
-
-        elif str(chartType) == "barplot":
-            graphJSON = reportGeneratorFunction.barPlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
-
-        elif str(chartType) == "piechartplot":
-            graphJSON = reportGeneratorFunction.pieChartPlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
-
-        elif str(chartType) == "lineplot":
-            graphJSON = reportGeneratorFunction.linePlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
-
-        elif str(chartType) == "lineareaplot":
-            graphJSON = reportGeneratorFunction.lineAreaPlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
-
-        elif str(chartType) == "histogramplot":
-            graphJSON = reportGeneratorFunction.histogramPlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
-
-        elif str(chartType) == "boxplot":
-            graphJSON = reportGeneratorFunction.boxPlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
-
-        elif str(chartType) == "violinplot":
-            graphJSON = reportGeneratorFunction.violinPlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
-
-        elif str(chartType) == "heatmapplot":
-            graphJSON = reportGeneratorFunction.heatmapPlot(csvData,x,y,color)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
-
-        else:
-            graphJSON = reportGeneratorFunction.scatterPlot(csvData)
-            html = render_template("report.html",
-                user=current_user, 
-                graphJSON = graphJSON)
+        # if newColumnName != '': # to jeszcze nie dziala
+        #     csvData = reportGeneratorFunction.rename_columns(csvData, {oldColumnName:newColumnName})
         
+        graphJSONtable = []
+        for i in range(len(chartsType)):
+            if str(chartsType[i]) == "scatterplot":
+                graphJSON = reportGeneratorFunction.scatterPlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
+
+            elif str(chartsType[i]) == "barplot":
+                graphJSON = reportGeneratorFunction.barPlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
+
+            elif str(chartsType[i]) == "piechartplot":
+                graphJSON = reportGeneratorFunction.pieChartPlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
+
+            elif str(chartsType[i]) == "lineplot":
+                graphJSON = reportGeneratorFunction.linePlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
+
+            elif str(chartsType[i]) == "lineareaplot":
+                graphJSON = reportGeneratorFunction.lineAreaPlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
+
+            elif str(chartsType[i]) == "histogramplot":
+                graphJSON = reportGeneratorFunction.histogramPlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
+
+            elif str(chartsType[i]) == "boxplot":
+                graphJSON = reportGeneratorFunction.boxPlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
+
+            elif str(chartsType[i]) == "violinplot":
+                graphJSON = reportGeneratorFunction.violinPlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
+
+            elif str(chartsType[i]) == "heatmapplot":
+                graphJSON = reportGeneratorFunction.heatmapPlot(csvData,xNames[i],yNames[i],colors[i])
+                graphJSONtable.append(graphJSON)
+
+            else:
+                graphJSON = reportGeneratorFunction.scatterPlot(csvData)
+                graphJSONtable.append(graphJSON)
+
+        #print(graphJSONtable)
+        html = render_template("report.html", user=current_user, graphJSONtable = graphJSONtable, graphJSON = graphJSONtable[0])
         return html
+
 
     fig = px.bar(df, x='Fruit', y='Amount', color='City', 
         barmode='group')
@@ -187,17 +172,32 @@ def visualization_and_reporting():
         form1 = form1
         )
 
-@views.route('/rename-column', methods=['POST'])
+@views.route('/rename-columns', methods=['GET', 'POST'])
 @login_required
-def rename_column():
-    # get_data = json.loads(request.data)
-    # df=get_data[0]
-    # dictionary = {get_data[1],get_data[2]}
+def rename_columns():
+    dataFound = False
+    try:
+        db_connector = db.get_engine().connect()
+        data = pd.read_sql('test', db_connector)
+        dataFound = True
+        cols = data.columns.tolist()
+    except (exc.SQLAlchemyError, exc.DatabaseError):
+        return render_template("visualization_and_reporting.html",user=current_user, dataFound = dataFound)
 
-    # try:
-    #     data = procces_csv(location)
-    #     dataFound = True
-    # except FileNotFoundError:
-    #     return render_template("visualization_and_reporting.html",user=current_user, dataFound = dataFound)
+    if request.method == 'POST':
+        col_to_rename = {}
+        for i in range(len(cols)):
+            new_name = request.form.get(f'new_column_name_{i}')
+            if new_name!='':
+                col_to_rename[cols[i]] = new_name
+        
+        data = data.rename(columns=col_to_rename)        
+        try:
+            data.to_sql('test', db_connector, if_exists='replace', index=False)
+            db_connector.close()
+        except (exc.ArgumentError, exc.DatabaseError):
+            return render_template('rename_columns.html', columns=cols, len=len(cols), repet=False)
 
-    return jsonify({})
+        return redirect(url_for('views.visualization_and_reporting'))
+
+    return render_template('rename_columns.html', columns=cols, len=len(cols), repet=True)

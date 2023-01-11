@@ -21,13 +21,15 @@ def allowed_file(filename):
 @importCsv.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
+    dataFound = False
     if request.method == 'POST':
+        sep = request.form.get('separator')
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             # Read file to pandas
             if request.form.get('if_use_first_row_as_column')!='on':
-                data = pd.read_csv(file,header=None, sep=';')
+                data = pd.read_csv(file,header=None, sep=sep)
                 data.columns = [f'column {i}' for i in range(1,data.shape[1]+1)]
             else:
                 data = pd.read_csv(file)
@@ -39,9 +41,8 @@ def upload():
                 data.to_sql('test', connnection, if_exists='replace', index=False)
                 connnection.close()
             except (exc.ArgumentError, exc.DatabaseError):
-                 pass
-            
+                return render_template("visualization_and_reporting.html",user=current_user, dataFound = False)
 
-        return redirect(url_for('views.visualization_and_reporting'))
+        return redirect(url_for('views.rename_columns'))
 
     return render_template('upload.html',user=current_user)

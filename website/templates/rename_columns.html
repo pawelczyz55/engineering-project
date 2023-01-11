@@ -1,0 +1,33 @@
+{% extends "base.html" %} {% block title %}Rename columns{% endblock %} 
+{% block content %}
+    {% if repet %}
+        <h1 align="center">Rename columns</h1>
+        <h6 align="center">Change names of columns witch you want to rename.</h6>
+        <h6 align="center">Only inserted new name will be applied.</h6>
+        <form method="POST">
+            {% for i in range(len) %}
+                <div class="row  justify-content-center">
+                    <div class="input-group mb-3 w-50" style="text-align:center;">
+                        <span class="input-group-text">{{ i }}</span>
+                        <span class="input-group-text">{{ columns[i] }}</span>
+                        <input type="text" class="form-control"
+                            aria-label="Insert new name if you want to rename that column"
+                            id="new-column-name-{{ i }}"
+                            name="new_column_name_{{ i }}"
+                            placeholder="New name">
+                    </div>
+                </div>
+            {% endfor %}
+            </br>
+            <div class="text-center">
+                <button class="btn btn-success btn-lg mx-auto">Apply</button>
+            </div>
+        </form>
+        </br></br>
+    {% else %}
+    <div style="text-align:center;">
+        <h3 style="color:red;" >Having trouble rename columns. Pleas try again.</h3>
+    </div>
+
+    {% endif %}
+{% endblock %}

@@ -69,7 +69,6 @@
 </script>
 
 
-
     {% if dataFound %}
     <h1 align="center">Visualization and reporting creator</h1>
     <div style="text-align:center;">
@@ -90,12 +89,21 @@
         </table>
     </div>
     <br/>
-    <br/>
 
-    <div align="center">
-        <h5>Current column names in table</h5>
-        <p>{{ columnsNames }} </p>
+    <div class="" align="center">
+        <h5>Additional functions: </h5>
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <div class="col col-lg-3">
+                    <a href="{{ url_for('views.rename_columns') }}" class="btn btn-warning" role="button">Rename columns</a>
+                </div>
+                <div class=" col col-lg-3">
+                    <a href="{{ url_for('views.rename_columns') }}" class="btn btn-warning" role="button">Data transformation</a>
+                </div>
+            </div>
+        </div>
     </div>
+    <br/>
 
     <h3 align="center"> Add your charts </h3>
         <div class="form-group">
@@ -130,21 +138,20 @@
                     </div>
                 <div style="display: none;"></div>
                 </div>
-                <input type="submit" name="submit" id="submit" class="btn btn-info" value="Generate report" />
+                            
+                <div class="addMoreForms">
+                    <button type="button" name="add" id="AddMoreFileBox" class="btn btn-success">Add More</button>
+                </div>
 
+                <input type="submit" name="submit" id="submit" class="btn btn-info btn-lg" value="Generate report" />
             </form>
 
-    <div class="addMoreForms">
-        <button type="button" name="add" id="AddMoreFileBox" class="btn btn-success">Add More</button>
-    </div>
 
     {% else %}
     <div style="text-align:center;">
-        <h3 style="color:red;">Having trouble to read csv file. Pleas upload it again.</h3>
+        <h3 style="color:red;">Having trouble to read your csv file. Pleas upload it again.</h3>
     </div>
 
     {% endif %}
-
-    
 
 {% endblock %}
