@@ -62,7 +62,26 @@ footer h3{
     padding: 10px 0px 0px 10px;
 }
 
-.dataframe{
-    margin: 50px;
+table.dataframe {
     text-align: center;
-}
+    background-color: #FFFFFF;
+    border-collapse: collapse;
+    border-width: 2px;
+    border-color: #7ea8f8;
+    border-style: solid;
+    color: #000000;
+  }
+
+  table.dataframe td, table.dataframe th {
+    text-align: center;
+    margin: 50px;
+    border-width: 2px;
+    border-color: #486EC7;
+    border-style: solid;
+    padding: 5px;
+  }
+
+  table.dataframe thead {
+    text-align: center;
+    background-color: #7ea8f8;
+  }

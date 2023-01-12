@@ -138,7 +138,8 @@ def visualization_and_reporting():
                 graphJSONtable.append(graphJSON)
 
         #print(graphJSONtable)
-        html = render_template("report.html", user=current_user, graphJSONtable = graphJSONtable, graphJSON = graphJSONtable[0])
+        chartsQuantity = len(graphJSONtable)
+        html = render_template("report.html", user=current_user, graphJSONtable = graphJSONtable, graphJSON = graphJSONtable[0], chartsQuantity = chartsQuantity)
         return html
 
     #Testowe dane
