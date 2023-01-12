@@ -10,6 +10,15 @@
         </p>
     </div>
 
+    <div>
+    {% for i in range(chartsQuantity)%}
+        <div id="chartAvg{{i}}" class='chartAvg{{i}}'></div>
+        <p>
+            Wykresy testowe{{i}}
+        </p>
+    {% endfor %}
+    <div>
+
     
     <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
     <script type='text/javascript'>
@@ -17,11 +26,20 @@
         Plotly.plot('chart',graphs,{});
     </script>
 
-    <script>
-        let g1 = {{graphJSONtable | safe}};
-        for (i in g1){ 
-            Plotly.plot('chartAvg'+i, g1[i].data, g1[i].layout || {}); 
+    <!-- <script type='text/javascript'>
+        let graphs1 = {{graphJSONtable | safe}};
+        for (i in graphs1){ 
+            Plotly.plot('chartAvg'+i, graphs1[i].data, graphs1[i].layout || {}); 
         }
+    </script> -->
+
+    <script type='text/javascript'>
+
+        {% for chartsQ in range(chartsQuantity)%}
+        var graphs{{chartsQ}} = {{graphJSONtable[chartsQ] | safe}};
+        Plotly.plot('chartAvg{{chartsQ}}', graphs{{chartsQ}}, {});
+        {% endfor%}
+
     </script>
 
 {% endblock %}
