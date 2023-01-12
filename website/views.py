@@ -7,8 +7,6 @@ import json
 import os
 import pandas as pd
 import pdfkit
-import plotly
-import plotly.express as px
 from sqlalchemy import exc
 
 views = Blueprint('views', __name__)
@@ -21,13 +19,6 @@ def home():
 @views.route('/notes', methods=['GET', 'POST'])
 @login_required
 def notes():
-    """
-    Function render Notes tab page.
-
-    Return:
-        - string - template name of 'notes.html'
-        - user - data of current loged in user
-    """
     if request.method == 'POST':
         note = request.form.get('note')
 
@@ -41,14 +32,6 @@ def notes():
             flash("Note added.", category='success')
 
     return render_template("notes.html", user=current_user )
-
-@views.route('/test', methods=['POST', 'GET'])
-@login_required
-def testowy():
-    df = px.data.iris()
-    stats = statsCsv.file_statistics(df)
- 
-    return render_template("testowy.html", stats=[stats.to_html()] )
 
 @views.route('/delete-note', methods=['POST'])
 @login_required
@@ -82,9 +65,8 @@ def visualization_and_reporting():
 
     tableOf5 = data.head()
     columnsNames = reportGeneratorFunction.getColumnsNamesInTable(data)
-    optionsChart = ["barplot", "scatterplot", "piechartplot", "lineplot", "lineareaplot", "histogramplot", "boxplot", "violinplot", "heatmapplot"]
-    form1 = forms.Forms()
-    #form1.chartType.choices = 
+    optionsChart = ["barplot", "scatterplot", "piechartplot", "lineplot", "lineareaplot",
+                    "histogramplot", "boxplot", "violinplot", "heatmapplot"]
 
     if request.method == 'POST':
         csvData = data
@@ -139,33 +121,21 @@ def visualization_and_reporting():
 
         #print(graphJSONtable)
         chartsQuantity = len(graphJSONtable)
-        html = render_template("report.html", user=current_user, graphJSONtable = graphJSONtable, graphJSON = graphJSONtable[0], chartsQuantity = chartsQuantity)
+        html = render_template("report.html", user=current_user, graphJSONtable = graphJSONtable,
+                                    graphJSON = graphJSONtable[0], chartsQuantity = chartsQuantity)
         return html
-
-    #Testowe dane
-    df = pd.DataFrame({
-      'Fruit': ['Apples', 'Oranges', 'Bananas', 'Apples', 'Oranges', 
-      'Bananas'],
-      'Amount': [4, 1, 2, 2, 4, 5],
-      'City': ['SF', 'SF', 'SF', 'Montreal', 'Montreal', 'Montreal']
-    })
-    fig = px.bar(df, x='Fruit', y='Amount', color='City', 
-        barmode='group')    
-    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     return render_template("visualization_and_reporting.html",user=current_user, 
         tables=[tableOf5.to_html()], 
-        dataFound = dataFound, 
-        graphJSON = graphJSON,
-        avaiable_columns= df.columns,
-        optionsToSelect = optionsChart,
-        form1 = form1
+        dataFound = dataFound,
+        optionsToSelect = optionsChart
         )
 
 @views.route('/rename-columns', methods=['GET', 'POST'])
 @login_required
 def rename_columns():
     dataFound = False
+    # Get table from data base
     try:
         db_connector = db.get_engine().connect()
         data = pd.read_sql('test', db_connector)
@@ -175,6 +145,7 @@ def rename_columns():
         return render_template("visualization_and_reporting.html",user=current_user, dataFound = dataFound)
 
     if request.method == 'POST':
+
         col_to_rename = {}
         for i in range(len(cols)):
             new_name = request.form.get(f'new_column_name_{i}')

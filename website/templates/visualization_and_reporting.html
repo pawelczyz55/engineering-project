@@ -106,49 +106,45 @@
     <br/>
 
     <h3 align="center"> Add your charts </h3>
-        <div class="form-group">
-            <form method="POST" name="add_charts" id="add_charts">
-                <div id="InputsWrapper">
-                    <div class="plot-option-choose">
-                        <label> Choose your chart: </label> 
-                        <br/>
-                        <select class="form-select form-select-sm"
-                            aria-label=".form-select-sm example"
-                            id="select-column-to-change"
-                            name="optionChartSelected[]"
-                            style="height: 35px;">
-                            <option selected>Select chart type</option>
-                            {% for optionToSelect in optionsToSelect %} 
-                                <option value= {{ optionToSelect }} >{{optionToSelect}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <label id="parameters-label"> Choose your parameters: </label> 
-                    <div class="chartsOptionFields">
-
-                        <label class="field-labels-first" for="x">X:</label>
-                        <input type="text" class="input-field-parameters" id="x" name="x[]" placeholder="Enter your X(column name)"/>
-
-                        <label class="field-labels" for="y">Y:</label>
-                        <input type="text" class="input-field-parameters" id="y" name="y[]" placeholder="Enter your Y(column name)"/>
-
-                        <label class="field-labels" for="color">color by column:</label>
-                        <input type="text" class="input-field-parameters" id="color" name="color[]" placeholder="Optional(column name)"/>
-
-
-
-                    </div>
-                <div style="display: none;"></div>
+    <div class="form-group">
+        <form method="POST" name="add_charts" id="add_charts">
+            <div id="InputsWrapper">
+                <div class="plot-option-choose">
+                    <label> Choose your chart: </label> 
+                    <br/>
+                    <select class="form-select form-select-sm"
+                        aria-label=".form-select-sm example"
+                        id="select-column-to-change"
+                        name="optionChartSelected[]"
+                        style="height: 35px;">
+                        <option selected>Select chart type</option>
+                        {% for optionToSelect in optionsToSelect %} 
+                            <option value= {{ optionToSelect }} >{{optionToSelect}}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-                            
-                <div class="addMoreForms">
-                    <button type="button" name="add" id="AddMoreFileBox" class="btn btn-success">Add More</button>
+                <label id="parameters-label"> Choose your parameters: </label> 
+                <div class="chartsOptionFields">
+
+                    <label class="field-labels-first" for="x">X:</label>
+                    <input type="text" class="input-field-parameters" id="x" name="x[]" placeholder="Enter your X(column name)"/>
+
+                    <label class="field-labels" for="y">Y:</label>
+                    <input type="text" class="input-field-parameters" id="y" name="y[]" placeholder="Enter your Y(column name)"/>
+
+                    <label class="field-labels" for="color">color by column:</label>
+                    <input type="text" class="input-field-parameters" id="color" name="color[]" placeholder="Optional(column name)"/>
+
                 </div>
-
-                <input type="submit" name="submit" id="submit" class="btn btn-info btn-lg" value="Generate report" />
-            </form>
-
-
+            <div style="display: none;"></div>
+            <div class="addMoreForms">
+                <button type="button" name="add" id="AddMoreFileBox" class="btn btn-success">Add More</button>
+            </div>
+            
+            <input type="submit" name="submit" id="submit" class="btn btn-info btn-lg" value="Generate report" />
+        </form>
+    </div>
+    
     {% else %}
     <div style="text-align:center;">
         <h3 style="color:red;">Having trouble to read your csv file. Pleas upload it again.</h3>
