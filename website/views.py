@@ -64,7 +64,6 @@ def visualization_and_reporting():
         return render_template("visualization_and_reporting.html",user=current_user, dataFound = dataFound)
 
     tableOf5 = data.head()
-    columnsNames = reportGeneratorFunction.getColumnsNamesInTable(data)
     optionsChart = ["barplot", "scatterplot", "piechartplot", "lineplot", "lineareaplot",
                     "histogramplot", "boxplot", "violinplot", "heatmapplot"]
 
