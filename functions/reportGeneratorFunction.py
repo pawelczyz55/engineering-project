@@ -3,9 +3,6 @@ import plotly
 import plotly.express as px
 
 
-def getColumnsNamesInTable(df):
-    return ' '.join(str(e) for e in df.columns)
-
 def barPlot(df, x, y, color):
     if(color != ''):
         fig = px.bar(df, x , y, color=color)

@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, render_template, request, flash, jsonify, url_for, redirect, make_response
 from flask_login import login_required, current_user
-from functions import reportGeneratorFunction, forms, statsCsv
+from functions import reportGeneratorFunction, statsCsv
 from .models import Note
 from . import db
 import json

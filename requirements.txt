@@ -11,5 +11,4 @@ sqlalchemy==1.4.39
 flask-sqlalchemy==2.5.1
 plotly==5.9.0
 dash==2.7.0
-flask-wtf==1.0.1
 pdfkit==1.0.0
