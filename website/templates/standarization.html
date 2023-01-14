@@ -1,0 +1,41 @@
+{% extends "base.html" %} {% block title %}Standarization{% endblock %} 
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"></script>
+
+    {% if repet %}
+        <h1 align="center">Standarization</h1>
+        <br/><br/>
+        <form method="POST">
+            <div class="form-group justify-content-center">
+                <div class="row mb-3">
+                    <h4 class="col-md text-right">Column name</h4>
+                    <h4 class="col-md">Action</h4>
+                </div>
+                <hr class="bg-danger border-3 border-top border-danger">
+                {% for i in range(len) %}
+                    <div class="row mb-3 ">
+                        <!-- <h5 >{{i}})</h5> -->
+                        <h5 class="col-md text-right">{{columns[i]}} </h5>
+                        <div class="col-md">
+                            <select class="form-select" id="standarization_col_{{i}}">
+                                <option selected value="">Do not standarize</option>
+                                <option value="new_column">Yes, to new column</option>
+                                <option value="replace_column">Yes, Replace oryginal</option>
+                            </select>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            </br>
+            <div class="text-center">
+                <button class="btn btn-success btn-lg mx-auto">Apply</button>
+            </div>
+        </form>
+        </br></br>
+    {% else %}
+    <div style="text-align:center;">
+        <h3 style="color:red;" >Page in build</h3>
+    </div>
+
+    {% endif %}
+{% endblock %}

@@ -28,6 +28,10 @@ def login():
 @auth.route('/logout')
 @login_required
 def logout():
+    sql = 'DROP TABLE IF EXISTS uploaded_data;'
+    engine = db.get_engine()
+    result = engine.execute(sql)
+
     logout_user()
     return redirect(url_for('auth.login'))
 

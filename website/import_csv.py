@@ -44,7 +44,7 @@ def upload():
             try:
                 engine = db.get_engine()
                 connnection = engine.connect()
-                data.to_sql('test', connnection, if_exists='replace', index=False)
+                data.to_sql('uploaded_data', connnection, if_exists='replace', index=False)
                 connnection.close()
             except (exc.ArgumentError, exc.DatabaseError):
                 # If error while file uploading or loading to data base print 'Having trouble' page

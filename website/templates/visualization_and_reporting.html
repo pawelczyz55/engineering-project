@@ -36,23 +36,27 @@
                             '<option value= {{ optionToSelect }} >{{optionToSelect}}</option>'+
                         '{% endfor %}'+
                     '</select>'+
-                '</div>'+
-                '<label id="parameters-label"> Choose your parameters: </label> '+
-                '<div class="chartsOptionFields">'+
+                    '</div>'+
+                    '<label id="parameters-label"> Choose your parameters: </label> '+
+                    '<div class="chartsOptionFields">'+
 
-                    '<label class="field-labels-first" for="x_'+FieldCount+'">X_'+FieldCount+':</label>'+
-                    '<input type="text" class="input-field-parameters" id="x_'+FieldCount+'" name="x[]" placeholder="Enter your X_'+FieldCount+'(column name)"/>'+
+                        '<label class="field-labels-first" for="x_'+FieldCount+'">X_'+FieldCount+':</label>'+
+                        '<input type="text" class="input-field-parameters" id="x_'+FieldCount+'" name="x[]" placeholder="Enter your X_'+FieldCount+'(column name)"/>'+
 
-                    '<label class="field-labels" for="y_'+FieldCount+'">Y_'+FieldCount+':</label>'+
-                    '<input type="text" class="input-field-parameters" id="y_'+FieldCount+'" name="y[]" placeholder="Enter your Y_'+FieldCount+'(column name)"/>'+
+                        '<label class="field-labels" for="y_'+FieldCount+'">Y_'+FieldCount+':</label>'+
+                        '<input type="text" class="input-field-parameters" id="y_'+FieldCount+'" name="y[]" placeholder="Enter your Y_'+FieldCount+'(column name)"/>'+
 
-                    '<label class="field-labels" for="color_'+FieldCount+'">color by column:</label>'+
-                    '<input type="text" class="input-field-parameters" id="color_'+FieldCount+'" name="color[]" placeholder="Optional '+FieldCount+'(column name)"/>'+
-
-                '<div style="display: none;"></div>'+
-                '</div>'+
-                '<a href="#" class="btn btn-danger removeclass">×</a>'+
-                '</div>');
+                        '<label class="field-labels" for="color_'+FieldCount+'">color by column:</label>'+
+                        '<input type="text" class="input-field-parameters" id="color_'+FieldCount+'" name="color[]" placeholder="Optional '+FieldCount+'(column name)"/>'+
+                        
+                    '</div>'+
+                    '<div class="chartsOptionFields">'+
+                        '<label class="field-labels-first" for="plot-title_'+FieldCount+'">Plot title:</label>'+
+                        '<input type="text" class="title-input-field-parameters" id="plot-title_'+FieldCount+'" name="titles[]" placeholder="Enter plot title"/>'+
+                    '</div>'+
+                    '<div style="display: none;"></div>'+
+                    '<a href="#" class="btn btn-danger removeclass">×</a>'+
+                    '</div>');
                 x++; //text box increment
             }
     return false;
@@ -65,6 +69,7 @@
                     FieldCount--;
             }
     return false;})
+
     });
 </script>
 
@@ -77,7 +82,7 @@
         <a href ="">{{filename}}</a><br />
         {% endfor%}
     </div>
-
+    
     <div align="center">
         <table>
             <h1>
@@ -91,16 +96,21 @@
     <br/>
 
     <div class="" align="center">
-        <h5>Additional functions: </h5>
+        <h3>Data transformation: </h3>
         <div class="container">
             <div class="row justify-content-md-center">
-                <div class="col col-lg-3">
+                <div class="col col-md-2">
                     <a href="{{ url_for('views.rename_columns') }}" class="btn btn-warning" role="button">Rename columns</a>
                 </div>
-                <div class=" col col-lg-3">
-                    <a href="{{ url_for('views.rename_columns') }}" class="btn btn-warning" role="button">Data transformation</a>
+                <div class=" col col-md-3">
+                    <a href="{{ url_for('views.standarization') }}" class="btn btn-warning" role="button">Standarizate a column</a>
+                </div>
+                <div class=" col col-md-2">
+                    <a href="{{ url_for('views.outliers') }}" class="btn btn-warning" role="button">Remove outliers</a>
                 </div>
             </div>
+            <br/>
+            
         </div>
     </div>
     <br/>
@@ -108,6 +118,15 @@
     <h3 align="center"> Add your charts </h3>
     <div class="form-group">
         <form method="POST" name="add_charts" id="add_charts">
+            <div class="chartsOptionFields">
+                <label class="selectCheckBox" name="summaryCheckBox">
+                    Print summary statisctics in report
+                    <input type="checkbox" id="summary-checkBox" name="ifSummaryCheckbox">
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+            <br/>
+
             <div id="InputsWrapper">
                 <div class="plot-option-choose">
                     <label> Choose your chart: </label> 
@@ -136,6 +155,10 @@
                     <input type="text" class="input-field-parameters" id="color" name="color[]" placeholder="Optional(column name)"/>
 
                 </div>
+                <div class="chartsOptionFields">
+                    <label class="field-labels-first" for="plot-title">Plot title:</label>
+                    <input type="text" class="title-input-field-parameters" id="plot-title" name="titles[]" placeholder="Enter plot title"/>
+                </div>
                 <div style="display: none;"></div>
             </div>
             <div class="addMoreForms">
@@ -147,7 +170,7 @@
     
     {% else %}
     <div style="text-align:center;">
-        <h3 style="color:red;">Having trouble to read your csv file. Pleas upload it again.</h3>
+        <h3 style="color:red;">Having trouble to read your data. Pleas upload a file.</h3>
     </div>
 
     {% endif %}

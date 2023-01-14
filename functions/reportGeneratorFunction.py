@@ -3,15 +3,15 @@ import plotly
 import plotly.express as px
 
 
-def barPlot(df, x, y, color):
+def barPlot(df, x, y, color, title):
     if(color != ''):
-        fig = px.bar(df, x , y, color=color)
+        fig = px.bar(df, str(x) , str(y), color=color)
     else:
-        fig = px.bar(df, x , y)
+        fig = px.bar(df, str(x) , str(y))
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
-def scatterPlot(df, x, y, color):
+def scatterPlot(df, x, y, color, title):
     if(color != ''):
         fig = px.scatter(df, x, y, color = color)
     else:
@@ -20,7 +20,7 @@ def scatterPlot(df, x, y, color):
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
-def pieChartPlot(df, x, y, color):
+def pieChartPlot(df, x, y, color, title):
     if(color != ''):
         fig = px.pie(df, x, y, color = color)
     else:
@@ -29,7 +29,7 @@ def pieChartPlot(df, x, y, color):
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
-def linePlot(df, x, y, color):
+def linePlot(df, x, y, color, title):
     if(color != ''):
         fig = px.line(df, x, y, color = color)
     else:
@@ -38,7 +38,7 @@ def linePlot(df, x, y, color):
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
-def lineAreaPlot(df, x, y, color):
+def lineAreaPlot(df, x, y, color, title):
     if(color != ''):
         fig = px.area(df, x, y, color = color)
     else:
@@ -47,7 +47,7 @@ def lineAreaPlot(df, x, y, color):
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
-def histogramPlot(df, x, y, color):
+def histogramPlot(df, x, y, color, title):
     if(color != ''):
         fig = px.histogram(df, x, y, color = color)
     else:
@@ -56,7 +56,7 @@ def histogramPlot(df, x, y, color):
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
-def boxPlot(df, x, y, color):
+def boxPlot(df, x, y, color, title):
     if(color != ''):
         fig = px.box(df, x, y, color = color)
     else:
@@ -65,7 +65,7 @@ def boxPlot(df, x, y, color):
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
-def violinPlot(df, x, y, color):
+def violinPlot(df, x, y, color, title):
     if(color != ''):
         fig = px.violin(df, x, y, color = color)
     else:
@@ -74,7 +74,7 @@ def violinPlot(df, x, y, color):
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
-def heatmapPlot(df, x, y, color):
+def heatmapPlot(df, x, y, color, title):
     if(color != ''):
         fig = px.density_heatmap(df, x, y)
     else:

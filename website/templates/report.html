@@ -2,20 +2,26 @@
 {% block content %}
 
     <h1 align="center">Generated report</h1>
-
-    <div>
-        <div id='chart' class='chart'></div>
-        <p>
-            Testowy wykres
-        </p>
+    <br/>
+    {% if showSummaryTable %}
+    <h3 align="center">Summary statistics</h3>
+    <div align="center">
+        <table>
+            <h1>
+            <!--Displaying the converted table-->
+                {% for table in tables %}                          
+                {{ table|safe }}
+                {% endfor %}
+            </h1> 
+        </table>
     </div>
-
+    {% endif %}
+    
+    <br/>
     <div>
     {% for i in range(chartsQuantity)%}
+        <h4 align="center">Figure {{i+1}}: {{titles[i]}}</h4>
         <div id="chartAvg{{i}}" class='chartAvg{{i}}'></div>
-        <p>
-            Wykresy testowe{{i}}
-        </p>
     {% endfor %}
     <div>
 
