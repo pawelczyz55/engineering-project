@@ -49,11 +49,6 @@ def delete_note():
 
     return jsonify({})
 
-@views.route('/reports', methods=['POST', 'GET'])
-@login_required
-def reports():
-    return render_template("reports.html", user=current_user)
-
 @views.route('/visualization-and-reporting', methods=['POST', 'GET'])
 @login_required
 def visualization_and_reporting():
@@ -92,52 +87,55 @@ def visualization_and_reporting():
             titles = request.form.getlist('titles[]')
             
             graphJSONtable = []
-            for i in range(len(chartsType)):
-                if str(chartsType[i]) == "scatterplot":
-                    graphJSON = reportGeneratorFunction.scatterPlot(csvData,xNames[i],yNames[i],colors[i])
-                    graphJSONtable.append(graphJSON)
+            try:
+                for i in range(len(chartsType)):
+                    if str(chartsType[i]) == "scatterplot":
+                            graphJSON = reportGeneratorFunction.scatterPlot(csvData,xNames[i],yNames[i],colors[i])
+                            graphJSONtable.append(graphJSON)
 
-                elif str(chartsType[i]) == "barplot":
-                    graphJSON = reportGeneratorFunction.barPlot(csvData,xNames[i],yNames[i],colors[i])
-                    graphJSONtable.append(graphJSON)
+                    elif str(chartsType[i]) == "barplot":
+                        graphJSON = reportGeneratorFunction.barPlot(csvData,xNames[i],yNames[i],colors[i])
+                        graphJSONtable.append(graphJSON)
 
-                elif str(chartsType[i]) == "piechartplot":
-                    graphJSON = reportGeneratorFunction.pieChartPlot(csvData,xNames[i],yNames[i],colors[i])
-                    graphJSONtable.append(graphJSON)
+                    elif str(chartsType[i]) == "piechartplot":
+                        graphJSON = reportGeneratorFunction.pieChartPlot(csvData,xNames[i],yNames[i],colors[i])
+                        graphJSONtable.append(graphJSON)
 
-                elif str(chartsType[i]) == "lineplot":
-                    graphJSON = reportGeneratorFunction.linePlot(csvData,xNames[i],yNames[i],colors[i])
-                    graphJSONtable.append(graphJSON)
+                    elif str(chartsType[i]) == "lineplot":
+                        graphJSON = reportGeneratorFunction.linePlot(csvData,xNames[i],yNames[i],colors[i])
+                        graphJSONtable.append(graphJSON)
 
-                elif str(chartsType[i]) == "lineareaplot":
-                    graphJSON = reportGeneratorFunction.lineAreaPlot(csvData,xNames[i],yNames[i],colors[i])
-                    graphJSONtable.append(graphJSON)
+                    elif str(chartsType[i]) == "lineareaplot":
+                        graphJSON = reportGeneratorFunction.lineAreaPlot(csvData,xNames[i],yNames[i],colors[i])
+                        graphJSONtable.append(graphJSON)
 
-                elif str(chartsType[i]) == "histogramplot":
-                    graphJSON = reportGeneratorFunction.histogramPlot(csvData,xNames[i],yNames[i],colors[i])
-                    graphJSONtable.append(graphJSON)
+                    elif str(chartsType[i]) == "histogramplot":
+                        graphJSON = reportGeneratorFunction.histogramPlot(csvData,xNames[i],yNames[i],colors[i])
+                        graphJSONtable.append(graphJSON)
 
-                elif str(chartsType[i]) == "boxplot":
-                    graphJSON = reportGeneratorFunction.boxPlot(csvData,xNames[i],yNames[i],colors[i])
-                    graphJSONtable.append(graphJSON)
+                    elif str(chartsType[i]) == "boxplot":
+                        graphJSON = reportGeneratorFunction.boxPlot(csvData,xNames[i],yNames[i],colors[i])
+                        graphJSONtable.append(graphJSON)
 
-                elif str(chartsType[i]) == "violinplot":
-                    graphJSON = reportGeneratorFunction.violinPlot(csvData,xNames[i],yNames[i],colors[i])
-                    graphJSONtable.append(graphJSON)
+                    elif str(chartsType[i]) == "violinplot":
+                        graphJSON = reportGeneratorFunction.violinPlot(csvData,xNames[i],yNames[i],colors[i])
+                        graphJSONtable.append(graphJSON)
 
-                elif str(chartsType[i]) == "heatmapplot":
-                    graphJSON = reportGeneratorFunction.heatmapPlot(csvData,xNames[i],yNames[i],colors[i])
-                    graphJSONtable.append(graphJSON)
+                    elif str(chartsType[i]) == "heatmapplot":
+                        graphJSON = reportGeneratorFunction.heatmapPlot(csvData,xNames[i],yNames[i],colors[i])
+                        graphJSONtable.append(graphJSON)
 
-                else:
-                    graphJSON = reportGeneratorFunction.scatterPlot(csvData)
-                    graphJSONtable.append(graphJSON)
+                    else:
+                        graphJSON = reportGeneratorFunction.scatterPlot(csvData)
+                        graphJSONtable.append(graphJSON)
 
-            chartsQuantity = len(graphJSONtable)
-            html = render_template("report.html", user=current_user, graphJSONtable = graphJSONtable, chartsQuantity = chartsQuantity,
+                chartsQuantity = len(graphJSONtable)
+                html = render_template("report.html", user=current_user, graphJSONtable = graphJSONtable, chartsQuantity = chartsQuantity,
                                         titles=titles, showSummaryTable=showSummaryTable, tables=summaryTable)
 
-            return redirect(url_for('views.report', html=html))
+                return redirect(url_for('views.report', html=html))
+            except:
+                flash("Błędne dane", category='error')
 
     except TypeError:
         # print info about misspelling in input fields
