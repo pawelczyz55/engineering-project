@@ -134,10 +134,10 @@ def visualization_and_reporting():
                     graphJSONtable.append(graphJSON)
 
             chartsQuantity = len(graphJSONtable)
-            html = render_template("report.html", user=current_user, graphJSONtable = graphJSONtable,
-                                        graphJSON = graphJSONtable[0], chartsQuantity = chartsQuantity,
+            html = render_template("report.html", user=current_user, graphJSONtable = graphJSONtable, chartsQuantity = chartsQuantity,
                                         titles=titles, showSummaryTable=showSummaryTable, tables=summaryTable)
-            return html
+
+            return redirect(url_for('views.report', html=html))
 
     except TypeError:
         # print info about misspelling in input fields
@@ -149,3 +149,9 @@ def visualization_and_reporting():
         dataFound = dataFound,
         optionsToSelect = optionsChart
         )
+
+@views.route('/report', methods=['GET', 'POST'])
+@login_required
+def report():
+    generatedHTML = request.args['html']
+    return generatedHTML

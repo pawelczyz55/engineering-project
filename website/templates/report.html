@@ -1,6 +1,31 @@
 {% extends "base.html" %} {% block title %}Generated report{% endblock %} 
 {% block content %}
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='html2canvas.min.js') }}"
+    ></script>
+    <script type="text/javascript">
+        window.html2canvas = html2canvas;
+        window.jsPDF = window.jspdf.jsPDF;
+
+        function pdfMaker(){
+            html2canvas(document.querySelector('#htmlContent'),{
+                allowTaint:true,
+                useCORS: true,
+                scale: 1,
+            }).then(canvas => {
+                var img = canvas.toDataURL("image/png");
+
+                var doc = new jsPDF();
+                doc.setFont('Arial');
+                doc.addImage(img, 'PNG',0,0,210,210)
+                doc.save();
+            });
+        }
+    </script>
+    <div id="htmlContent">
     <h1 align="center">Generated report</h1>
     <br/>
     {% if showSummaryTable %}
@@ -23,22 +48,17 @@
         <h4 align="center">Figure {{i+1}}: {{titles[i]}}</h4>
         <div id="chartAvg{{i}}" class='chartAvg{{i}}'></div>
     {% endfor %}
-    <div>
+    </div>
+    </div>
+
+    <center>
+        <p>
+            <button onclick="pdfMaker()">Download as PDF</button>
+        </p>
+    </center>
 
     
     <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-    <script type='text/javascript'>
-        var graphs = {{graphJSON | safe}};
-        Plotly.plot('chart',graphs,{});
-    </script>
-
-    <!-- <script type='text/javascript'>
-        let graphs1 = {{graphJSONtable | safe}};
-        for (i in graphs1){ 
-            Plotly.plot('chartAvg'+i, graphs1[i].data, graphs1[i].layout || {}); 
-        }
-    </script> -->
-
     <script type='text/javascript'>
 
         {% for chartsQ in range(chartsQuantity)%}
