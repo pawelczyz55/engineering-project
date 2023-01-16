@@ -135,7 +135,7 @@ def visualization_and_reporting():
 
                 return redirect(url_for('views.report', html=html))
             except:
-                flash("Błędne dane", category='error')
+                flash("incorrect data", category='error')
 
     except TypeError:
         # print info about misspelling in input fields
