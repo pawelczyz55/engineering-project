@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, url_for, redirect
+from flask import Blueprint, render_template, request, url_for, redirect, flash
 from flask_login import login_required, current_user
 from . import db
 import pandas as pd
@@ -34,25 +34,30 @@ def upload():
 
         # If file extention is acceptable
         if file and allowed_file(file.filename):
-            # Read file to pandas
-            if request.form.get('if_use_first_row_as_column')!='on':
-                data = pd.read_csv(file,header=None, sep=sep)
-                data.columns = [f'column {i}' for i in range(1,data.shape[1]+1)]
-            else:
-                data = pd.read_csv(file)
-            
-            # Write data into the table in SQLite database
             try:
+                # Read file to pandas
+                if request.form.get('if_use_first_row_as_column')!='on':
+                    data = pd.read_csv(file,header=None, sep=sep)
+                    data.columns = [f'column {i}' for i in range(1,data.shape[1]+1)]
+                else:
+                    data = pd.read_csv(file)
+                
+                # Write data into the table in SQLite database
                 engine = db.get_engine()
                 connnection = engine.connect()
                 data.to_sql('uploaded_data', connnection, if_exists='replace', index=False)
                 connnection.close()
             except (exc.ArgumentError, exc.DatabaseError):
                 # If error while file uploading or loading to data base print 'Having trouble' page
-                return render_template("visualization_and_reporting.html",user=current_user, dataFound = False)
+                flash("Your file can't not be uploaded. Pleas check upload option and the structure of your file.", category='error')
+                return render_template("upload.html",user=current_user, dataFound = False)
 
-        # If correctly uploaded go to rename column page 
-        return redirect(url_for('transform.rename_columns'))
+            # If correctly uploaded go to rename column page 
+            return redirect(url_for('transform.rename_columns'))
+        
+        # If incorrect file type
+        flash("Incorect file type. Pleas upload '.csv' file", category='error')
+        return render_template('upload.html',user=current_user)
 
     # Render '/upload' page
     return render_template('upload.html',user=current_user)
