@@ -17,10 +17,10 @@
                         <!-- <h5 >{{i}})</h5> -->
                         <h5 class="col-md text-right">{{columns[i]}} </h5>
                         <div class="col-md">
-                            <select class="form-select" id="standarization_col_{{i}}">
-                                <option selected value="">Do not standarize</option>
-                                <option value="new_column">Yes, to new column</option>
-                                <option value="replace_column">Yes, Replace oryginal</option>
+                            <select class="form-select" id="standarization_col_{{i}}" name="standartCol{{i}}">
+                                <option value="no" selected>Do not standarize</option>
+                                <option value="newColumn">Yes, to new column</option>
+                                <option value="replaceColumn">Yes, Replace oryginal</option>
                             </select>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
         </br></br>
     {% else %}
     <div style="text-align:center;">
-        <h3 style="color:red;" >Page in build</h3>
+        <h3 style="color:red;" >Soro, we found some error. Pleas load page again.</h3>
     </div>
 
     {% endif %}

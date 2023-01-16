@@ -16,10 +16,12 @@ def create_app():
     from .views import views
     from .auth import auth
     from .import_csv import importCsv
+    from .transformation import transform
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(importCsv, url_prefix='/')
+    app.register_blueprint(transform, url_prefix='/')
 
     from . import models
 

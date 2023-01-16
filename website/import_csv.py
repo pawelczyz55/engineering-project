@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from . import db
 import pandas as pd
 from sqlalchemy import exc
+from .transformation import transform
 
 importCsv = Blueprint('import_csv', __name__)
 
@@ -51,7 +52,7 @@ def upload():
                 return render_template("visualization_and_reporting.html",user=current_user, dataFound = False)
 
         # If correctly uploaded go to rename column page 
-        return redirect(url_for('views.rename_columns'))
+        return redirect(url_for('transform.rename_columns'))
 
     # Render '/upload' page
     return render_template('upload.html',user=current_user)

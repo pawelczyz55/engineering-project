@@ -100,13 +100,13 @@
         <div class="container">
             <div class="row justify-content-md-center">
                 <div class="col col-md-2">
-                    <a href="{{ url_for('views.rename_columns') }}" class="btn btn-warning" role="button">Rename columns</a>
+                    <a href="{{ url_for('transform.rename_columns') }}" class="btn btn-warning" role="button">Rename columns</a>
                 </div>
                 <div class=" col col-md-3">
-                    <a href="{{ url_for('views.standarization') }}" class="btn btn-warning" role="button">Standarizate a column</a>
+                    <a href="{{ url_for('transform.standarization') }}" class="btn btn-warning" role="button">Standarizate a column</a>
                 </div>
                 <div class=" col col-md-2">
-                    <a href="{{ url_for('views.outliers') }}" class="btn btn-warning" role="button">Remove outliers</a>
+                    <a href="{{ url_for('transform.outliers') }}" class="btn btn-warning" role="button">Remove outliers</a>
                 </div>
             </div>
             <br/>
@@ -172,7 +172,6 @@
     <div style="text-align:center;">
         <h3 style="color:red;">Having trouble to read your data. Pleas upload a file.</h3>
     </div>
-
     {% endif %}
 
 {% endblock %}

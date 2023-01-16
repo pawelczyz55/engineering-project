@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, render_template, request, flash, jsonify, url_for, redirect, make_response
 from flask_login import login_required, current_user
-from functions import reportGeneratorFunction, statsCsv
+from functions import reportGeneratorFunction, stats
 from .models import Note
 from . import db
 import json
@@ -83,7 +83,7 @@ def visualization_and_reporting():
                 showSummaryTable = True
             else:
                 showSummaryTable = False
-            summaryTable = [statsCsv.file_statistics(data).to_html()]
+            summaryTable = [stats.describeStatistics(data).to_html()]
 
             # multiple charts parameters in array
             xNames = request.form.getlist('x[]')
@@ -94,39 +94,39 @@ def visualization_and_reporting():
             graphJSONtable = []
             for i in range(len(chartsType)):
                 if str(chartsType[i]) == "scatterplot":
-                    graphJSON = reportGeneratorFunction.scatterPlot(csvData,xNames[i],yNames[i],colors[i],titles[i])
+                    graphJSON = reportGeneratorFunction.scatterPlot(csvData,xNames[i],yNames[i],colors[i])
                     graphJSONtable.append(graphJSON)
 
                 elif str(chartsType[i]) == "barplot":
-                    graphJSON = reportGeneratorFunction.barPlot(csvData,xNames[i],yNames[i],colors[i],titles[i])
+                    graphJSON = reportGeneratorFunction.barPlot(csvData,xNames[i],yNames[i],colors[i])
                     graphJSONtable.append(graphJSON)
 
                 elif str(chartsType[i]) == "piechartplot":
-                    graphJSON = reportGeneratorFunction.pieChartPlot(csvData,xNames[i],yNames[i],colors[i],titles[i])
+                    graphJSON = reportGeneratorFunction.pieChartPlot(csvData,xNames[i],yNames[i],colors[i])
                     graphJSONtable.append(graphJSON)
 
                 elif str(chartsType[i]) == "lineplot":
-                    graphJSON = reportGeneratorFunction.linePlot(csvData,xNames[i],yNames[i],colors[i],titles[i])
+                    graphJSON = reportGeneratorFunction.linePlot(csvData,xNames[i],yNames[i],colors[i])
                     graphJSONtable.append(graphJSON)
 
                 elif str(chartsType[i]) == "lineareaplot":
-                    graphJSON = reportGeneratorFunction.lineAreaPlot(csvData,xNames[i],yNames[i],colors[i],titles[i])
+                    graphJSON = reportGeneratorFunction.lineAreaPlot(csvData,xNames[i],yNames[i],colors[i])
                     graphJSONtable.append(graphJSON)
 
                 elif str(chartsType[i]) == "histogramplot":
-                    graphJSON = reportGeneratorFunction.histogramPlot(csvData,xNames[i],yNames[i],colors[i],titles[i])
+                    graphJSON = reportGeneratorFunction.histogramPlot(csvData,xNames[i],yNames[i],colors[i])
                     graphJSONtable.append(graphJSON)
 
                 elif str(chartsType[i]) == "boxplot":
-                    graphJSON = reportGeneratorFunction.boxPlot(csvData,xNames[i],yNames[i],colors[i],titles[i])
+                    graphJSON = reportGeneratorFunction.boxPlot(csvData,xNames[i],yNames[i],colors[i])
                     graphJSONtable.append(graphJSON)
 
                 elif str(chartsType[i]) == "violinplot":
-                    graphJSON = reportGeneratorFunction.violinPlot(csvData,xNames[i],yNames[i],colors[i],titles[i])
+                    graphJSON = reportGeneratorFunction.violinPlot(csvData,xNames[i],yNames[i],colors[i])
                     graphJSONtable.append(graphJSON)
 
                 elif str(chartsType[i]) == "heatmapplot":
-                    graphJSON = reportGeneratorFunction.heatmapPlot(csvData,xNames[i],yNames[i],colors[i],titles[i])
+                    graphJSON = reportGeneratorFunction.heatmapPlot(csvData,xNames[i],yNames[i],colors[i])
                     graphJSONtable.append(graphJSON)
 
                 else:
@@ -149,81 +149,3 @@ def visualization_and_reporting():
         dataFound = dataFound,
         optionsToSelect = optionsChart
         )
-
-@views.route('/rename-columns', methods=['GET', 'POST'])
-@login_required
-def rename_columns():
-    dataFound = False
-    # Get data from data base
-    try:
-        db_connector = db.get_engine().connect()
-        data = pd.read_sql('uploaded_data', db_connector)
-        dataFound = True
-        cols = data.columns.tolist()
-    except (exc.SQLAlchemyError, exc.DatabaseError):
-        return render_template("visualization_and_reporting.html",user=current_user, dataFound = dataFound)
-
-    if request.method == 'POST':
-        # Set dictionary of columns to change from input data
-        col_to_rename = {}
-        for i in range(len(cols)):
-            new_name = request.form.get(f'new_column_name_{i}')
-            if new_name!='':
-                col_to_rename[cols[i]] = new_name
-        # process column renaming
-        data = data.rename(columns=col_to_rename)        
-        try:
-            data.to_sql('uploaded_data', db_connector, if_exists='replace', index=False)
-            db_connector.close()
-        except (exc.ArgumentError, exc.DatabaseError):
-            # render error page
-            return render_template('rename_columns.html', columns=cols, len=len(cols), repet=False)
-
-        # return to visualisation page apply click on
-        return redirect(url_for('views.visualization_and_reporting'))
-
-    # Render page for renaming a columns
-    return render_template('rename_columns.html', columns=cols, len=len(cols), repet=True)
-
-@views.route('/standarization', methods=['GET', 'POST'])
-@login_required
-def standarization():
-    dataFound = False
-    # Get table from data base
-    try:
-        db_connector = db.get_engine().connect()
-        data = pd.read_sql('uploaded_data', db_connector)
-        dataFound = True
-        all_cols = data.columns.tolist()
-        cols = [col for col in all_cols if pd.api.types.is_numeric_dtype(data[col])]
-    except (exc.SQLAlchemyError, exc.DatabaseError):
-        return render_template("visualization_and_reporting.html",user=current_user, dataFound = dataFound)
-
-    if request.method == 'POST':
-        # Load input data
-        col_to_add_as_standarized= []
-        col_to_standarize_and_replace = []
-        # iterate over input rows equal to columns
-        for i in range(len(cols)):
-            value = request.form.get(f'standarization_col_{i}')
-            if value=='new_column':
-                col_to_add_as_standarized.append(cols[i])
-            elif value=='replace_column':
-                col_to_standarize_and_replace.append(cols[i])
-
-        # process column standarization
-        # for 
-
-
-        db_connector.close()
-
-        return redirect(url_for('views.visualization_and_reporting'))
-
-    db_connector.close()
-
-    return render_template('standarization.html', columns=cols, len=len(cols), repet=True)
-
-@views.route('/remove-outliers', methods=['GET', 'POST'])
-@login_required
-def outliers():
-    return render_template('outliers.html')
